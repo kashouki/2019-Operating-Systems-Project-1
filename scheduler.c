@@ -12,7 +12,6 @@
 #include <time.h>
 #include <signal.h>
 
-
 typedef struct process{
     int pid;
     char name[32];
@@ -20,12 +19,12 @@ typedef struct process{
     int t_exec;
 }process;
 
-
 char S[8]; //scheduling policy
-int Nn; //number of processes
-char N[1024][32]; //names of the processes
-int R[1024]; //ready time
-int T[1024]; //execution time
+int N; //number of processes
+
+int cmp(const void *a, const void *b) {
+    return (struct process *)a->t_ready - (struct process *)b->t_ready;
+}
 
 int main(int argc, char *argv[]) {
     
@@ -56,7 +55,7 @@ int main(int argc, char *argv[]) {
         scanf("%s%d%d", proc[i].name, &proc[i].t_ready, &proc[i].t_exec);
     }
     
-    
+    qsort(proc, N, sizeof(struct process), cmp);
     
     
     
