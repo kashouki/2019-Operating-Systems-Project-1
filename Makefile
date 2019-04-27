@@ -1,5 +1,5 @@
 all:
-	gcc scheduler.c -lpthread -o scheduler
+	gcc scheduler.c -o scheduler
 run:
 	./scheduler 
 clean:

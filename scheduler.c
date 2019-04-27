@@ -12,6 +12,15 @@
 #include <time.h>
 #include <signal.h>
 
+
+typedef struct process{
+    int pid;
+    char name[32];
+    int t_ready;
+    int t_exec;
+}process;
+
+
 char S[8]; //scheduling policy
 int Nn; //number of processes
 char N[1024][32]; //names of the processes
@@ -21,10 +30,9 @@ int T[1024]; //execution time
 int main(int argc, char *argv[]) {
     
     int policy = 0;
+    process *proc;
     
-    //INPUT
     scanf("%s", S);
-    
     if(strcmp(S, "FIFO") == 0) {
         policy = 1;
     }
@@ -43,9 +51,15 @@ int main(int argc, char *argv[]) {
     }
     
     scanf("%d", &Nn);
+    proc = (struct process *)malloc(Nn * sizeof(process));
     for(int i = 0; i < Nn; i++) {
-        scanf("%s%d%d", N[i], &R[i], &T[i]);
+        scanf("%s%d%d", proc[i].name, &proc[i].t_ready, &proc[i].t_exec);
     }
+    
+    
+    
+    
+    
     
     
     
