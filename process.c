@@ -13,6 +13,7 @@
 #include <time.h>
 #include <signal.h>
 #include <sched.h>
+#include "process.h"
 #define FIFO    1
 #define RR      2
 #define SJF     3
@@ -21,21 +22,14 @@
 #define WAKE    1
 #define BLOCK   -1
 
-typedef struct process{
+int exec_proc(process* proc) {
     int pid;
-    char name[32];
-    int t_ready;
-    int t_exec;
-}process;
-
-int exec_proc(process proc) {
-    int pid;
-    if(pid = fork() < 0) {
+    if((pid = fork()) < 0) {
         fprintf(stderr, "fork error");
         exit(1);
     }
     else if(pid == 0) {
-        for(int i = 0; i < proc.t_exec; i++) {
+        for(int i = 0; i < proc->t_exec; i++) {
             
             
             
@@ -70,10 +64,10 @@ int wake_block_proc(int pid, int wakeblock) {
     return ret;
 }
 
-int select_next_process(process proc, int N, int policy, int time) {
+int select_next_process(process* proc, int N, int policy, int time, int running) {
     for(int i = 0; i < N; i++) {
         if(proc[i].t_ready == time) {
-            proc[i].pid = exec_proc(proc[i]);
+            proc[i].pid = exec_proc(&proc[i]);
         }
     }
     /*next process judgement*/
@@ -84,7 +78,7 @@ int select_next_process(process proc, int N, int policy, int time) {
         next_process = -1;
     }
     else if (running != 1 && policy == FIFO){/*nah*/
-        next = -1;
+        next_process = -1;
     }
     else {/*yes*/
         int loc = -1;

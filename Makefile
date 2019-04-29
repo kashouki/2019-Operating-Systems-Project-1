@@ -1,5 +1,5 @@
 all:
-	gcc scheduler.c -o scheduler
+	gcc scheduler.c process.c -o scheduler
 run:
 	./scheduler 
 clean:

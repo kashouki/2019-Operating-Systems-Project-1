@@ -13,6 +13,7 @@
 #include <time.h>
 #include <signal.h>
 #include <sched.h>
+#include "process.h"
 #define FIFO    1
 #define RR      2
 #define SJF     3
@@ -53,7 +54,7 @@ int main(int argc, char *argv[]) {
     }
     
     scanf("%d", &N);
-    proc = (struct process *)malloc(N * sizeof(process));
+    proc = (struct process *)malloc(N * sizeof(process*));
     for(int i = 0; i < N; i++) {
         scanf("%s%d%d", proc[i].name, &proc[i].t_ready, &proc[i].t_exec);
     }
@@ -80,11 +81,10 @@ int main(int argc, char *argv[]) {
         }
         
         //select the next process
-        int select = select_next_process(proc, N, policy, time);
-        if(select != -1 && running != next) {
-            wake_proc();
+        int select = select_next_process(proc, N, policy, time, running);
+        if(select != -1 && running != select) {
             
-            running = next;
+            running = select;
             
         }
         
