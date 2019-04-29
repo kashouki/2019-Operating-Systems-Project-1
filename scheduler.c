@@ -9,8 +9,10 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/select.h>
+#include <sys/syscall.h>
 #include <time.h>
 #include <signal.h>
+#include <sched.h>
 #define FIFO    1
 #define RR      2
 #define SJF     3
@@ -87,6 +89,7 @@ int main(int argc, char *argv[]) {
         }
         
         //time increment
+        
         if(running != -1) {
             proc[running].t_exec--;
         }

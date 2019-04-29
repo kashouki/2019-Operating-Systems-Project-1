@@ -9,8 +9,10 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/select.h>
+#include <sys/syscall.h>
 #include <time.h>
 #include <signal.h>
+#include <sched.h>
 #define FIFO    1
 #define RR      2
 #define SJF     3
@@ -26,10 +28,11 @@ typedef struct process{
     int t_exec;
 }process;
 
-int create_proc(process proc) {
+int exec_proc(process proc) {
     int pid;
     if(pid = fork() < 0) {
         fprintf(stderr, "fork error");
+        exit(1);
     }
     else if(pid == 0) {
         for(int i = 0; i < proc.t_exec; i++) {
@@ -55,11 +58,12 @@ int wake_block_proc(int pid, int wakeblock) {
         ret = sched_setscheduler(pid, SCHED_IDLE, &par);
     }
     else {
+        fprintf(stderr, "wakeblock parameter error\n");
         return -1;
     }
     
     if(ret < 0){
-        fprintf(stderr, "sched_setscheduler error");
+        fprintf(stderr, "sched_setscheduler error\n");
         return -1;
     }
     
@@ -69,7 +73,7 @@ int wake_block_proc(int pid, int wakeblock) {
 int select_next_process(process proc, int N, int policy, int time) {
     for(int i = 0; i < N; i++) {
         if(proc[i].t_ready == time) {
-            proc[i].pid = create_proc(proc[i]);
+            proc[i].pid = exec_proc(proc[i]);
         }
     }
     /*next process judgement*/
@@ -77,38 +81,38 @@ int select_next_process(process proc, int N, int policy, int time) {
 
     /*premptive judgement*/
     if(running != 1 && policy == SJF){/*nah*/
-	next_process = -1;
+        next_process = -1;
     }
     else if (running != 1 && policy == FIFO){/*nah*/
-	next = -1;
+        next = -1;
     }
     else {/*yes*/
-	int loc = -1;
-	if(policy == FIFO){
+        int loc = -1;
+        if(policy == FIFO){
        	    /*FIFO*/
-	}
-	else if(policy == SJF){
-	    /*SJF*/
-	    int flag = 0;
-	    for(int i=0; i<N; i++){
-            if(proc[i].pid == -1 || proc[i].t_exec == 0){
-                continue;
-            }
-            if(proc[i].t_exec < proc[loc].t_exec){
-                flag = 1;
-            }
-            if(loc == -1 || flag == 1){
-                loc = i;
-            }
-            flag = 0;
         }
-	}
-	else if(policy == PSJF){
-		/*PSJF*/
-	}
-	else if(policy == RR){
-		/*RR*/
-	}
+        else if(policy == SJF){
+            /*SJF*/
+            int flag = 0;
+            for(int i=0; i<N; i++){
+                if(proc[i].pid == -1 || proc[i].t_exec == 0){
+                    continue;
+                }
+                if(proc[i].t_exec < proc[loc].t_exec){
+                    flag = 1;
+                }
+                if(loc == -1 || flag == 1){
+                    loc = i;
+                }
+                flag = 0;
+            }
+        }
+        else if(policy == PSJF){
+            /*PSJF*/
+        }
+        else if(policy == RR){
+            /*RR*/
+        }
     }
 }
 
