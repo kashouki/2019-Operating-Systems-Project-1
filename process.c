@@ -16,6 +16,8 @@
 #define SJF     3
 #define PSJF    4
 #define ever    ;;
+#define WAKE    1
+#define BLOCK   -1
 
 typedef struct process{
     int pid;
@@ -30,11 +32,40 @@ int create_proc(process proc) {
         fprintf(stderr, "fork error");
     }
     else if(pid == 0) {
-        
+        for(int i = 0; i < proc.t_exec; i++) {
+            
+            
+            
+            
+        }
+        exit(0);
     }
     
-    
+    return pid;
 }
+
+int wake_block_proc(int pid, int wakeblock) {
+    struct sched_param par;
+    par.sched_priority = 0;
+    int ret;
+    if(wakeblock == WAKE) {
+        ret = sched_setscheduler(pid, SCHED_OTHER, &par);
+    }
+    else if(wakeblock == BLOCK) {
+        ret = sched_setscheduler(pid, SCHED_IDLE, &par);
+    }
+    else {
+        fprintf(stderr, "setscheduler error");
+        exit(1);
+    }
+    
+    if(ret < 0){
+        perror("sched_setscheduler");
+        return -1;
+    }
+    return ret;
+}
+
 
 int select_next_process(process proc, int N, int policy, int time) {
     for(int i = 0; i < N; i++) {

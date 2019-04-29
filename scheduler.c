@@ -16,6 +16,8 @@
 #define SJF     3
 #define PSJF    4
 #define ever    ;;
+#define WAKE    1
+#define BLOCK   -1
 
 char S[8]; //scheduling policy
 int N; //number of processes
