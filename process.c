@@ -42,43 +42,36 @@ int select_next_process(process proc, int N, int policy, int time) {
             proc[i].pid = create_proc(proc[i]);
         }
     }
-    
-    
-    
-    
-    
-}
+    /*next process judgement*/
+    int next_process;
 
-/*next process judgement*/
-int next_process;
-
-/*premptive judgement*/
-if(running != 1 && policy == SJF){/*nah*/
+    /*premptive judgement*/
+    if(running != 1 && policy == SJF){/*nah*/
 	next_process = -1;
-}
-else if (running != 1 && policy == FIFO){/*nah*/
+    }
+    else if (running != 1 && policy == FIFO){/*nah*/
 	next = -1;
-}
-else {/*yes*/
+    }
+    else {/*yes*/
 	int loc = -1;
 	if(policy == FIFO){
-		/*FIFO*/
+       	    /*FIFO*/
 	}
 	else if(policy == SJF){
-		/*SJF*/
-		int flag = 0;
-		for(int i=0; i<N; i++){
-			if(proc[i].pid == -1 || proc[i].t_exec == 0){
-				continue;
-			}
-			if(proc[i].t_exec < proc[loc].t_exec){
-				flag = 1;
-			}
-			if(loc == -1 || flag == 1){
-				loc = i;
-			}
-			flag = 0;
+	    /*SJF*/
+	    int flag = 0;
+	    for(int i=0; i<N; i++){
+		if(proc[i].pid == -1 || proc[i].t_exec == 0){
+		    continue;
 		}
+		if(proc[i].t_exec < proc[loc].t_exec){
+		    flag = 1;
+		}
+		if(loc == -1 || flag == 1){
+		    loc = i;
+		}
+		flag = 0;
+	    }
 	}
 	else if(policy == PSJF){
 		/*PSJF*/
@@ -86,4 +79,6 @@ else {/*yes*/
 	else if(policy == RR){
 		/*RR*/
 	}
+    }
 }
+
