@@ -66,7 +66,6 @@ int wake_block_proc(int pid, int wakeblock) {
     return ret;
 }
 
-
 int select_next_process(process proc, int N, int policy, int time) {
     for(int i = 0; i < N; i++) {
         if(proc[i].t_ready == time) {
@@ -92,17 +91,17 @@ int select_next_process(process proc, int N, int policy, int time) {
 	    /*SJF*/
 	    int flag = 0;
 	    for(int i=0; i<N; i++){
-		if(proc[i].pid == -1 || proc[i].t_exec == 0){
-		    continue;
-		}
-		if(proc[i].t_exec < proc[loc].t_exec){
-		    flag = 1;
-		}
-		if(loc == -1 || flag == 1){
-		    loc = i;
-		}
-		flag = 0;
-	    }
+            if(proc[i].pid == -1 || proc[i].t_exec == 0){
+                continue;
+            }
+            if(proc[i].t_exec < proc[loc].t_exec){
+                flag = 1;
+            }
+            if(loc == -1 || flag == 1){
+                loc = i;
+            }
+            flag = 0;
+        }
 	}
 	else if(policy == PSJF){
 		/*PSJF*/
