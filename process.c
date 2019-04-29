@@ -103,6 +103,12 @@ int select_next_process(process* proc, int N, int policy, int time, int running)
         }
         else if(policy == PSJF){
             /*PSJF*/
+            for (int i = 0; i < N; i++) {
+                if (proc[i].pid == -1 || proc[i].t_exec == 0)
+                    continue;
+                if (loc == -1 || proc[i].t_exec < proc[ret].t_exec)
+                    loc = i;
+             }
         }
         else if(policy == RR){
             /*RR*/
