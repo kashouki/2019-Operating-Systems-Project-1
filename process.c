@@ -26,7 +26,12 @@ typedef struct process{
 
 int create_proc(process proc) {
     int pid;
-    if()
+    if(pid = fork() < 0) {
+        fprintf(stderr, "fork error");
+    }
+    else if(pid == 0) {
+        
+    }
     
     
 }
