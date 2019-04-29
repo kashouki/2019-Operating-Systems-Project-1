@@ -15,6 +15,7 @@
 #define RR      2
 #define SJF     3
 #define PSJF    4
+#define ever    ;;
 
 typedef struct process{
     int pid;
@@ -27,7 +28,7 @@ char S[8]; //scheduling policy
 int N; //number of processes
 
 int cmp(const void *a, const void *b) {
-    return (struct process *)a->t_ready - (struct process *)b->t_ready;
+    return ((process *)a)->t_ready - ((process *)b)->t_ready;
 }
 
 int main(int argc, char *argv[]) {
@@ -35,6 +36,7 @@ int main(int argc, char *argv[]) {
     int policy = 0;
     process *proc;
     
+    //input
     scanf("%s", S);
     if(strcmp(S, "FIFO") == 0) {
         policy = FIFO;
@@ -53,39 +55,40 @@ int main(int argc, char *argv[]) {
         exit(0);
     }
     
-    scanf("%d", &Nn);
+    scanf("%d", &N);
     proc = (struct process *)malloc(N * sizeof(process));
     for(int i = 0; i < N; i++) {
         scanf("%s%d%d", proc[i].name, &proc[i].t_ready, &proc[i].t_exec);
     }
     
+    //sort processes by ready time
     qsort(proc, N, sizeof(struct process), cmp);
     
     int time = 0;
     int running = -1;
     int n_finished = 0;
     
-    while(1) {
+    //start processes
+    for(ever) {
         
+        //check current running process
         if(running != -1 && proc[running].t_exec == 0) {
-            
-            
+            waitpid(proc[running].pid, NULL, 0);
+            running = -1;
+            n_finished++;
             
             if(n_finished == N) {
                 break;
             }
         }
         
-        for(int i = 0; i < N; i++) {
-            if(proc[i].t_ready == ntime) {
-                
-            }
-        }
+        //select the next process
         
+        
+        //time increment
         if(running != -1) {
             proc[running].t_exec--;
         }
-        
         time++;
     }
     
