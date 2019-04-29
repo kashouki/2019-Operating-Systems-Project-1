@@ -55,14 +55,14 @@ int wake_block_proc(int pid, int wakeblock) {
         ret = sched_setscheduler(pid, SCHED_IDLE, &par);
     }
     else {
-        fprintf(stderr, "setscheduler error");
-        exit(1);
+        return -1;
     }
     
     if(ret < 0){
-        perror("sched_setscheduler");
+        fprintf(stderr, "sched_setscheduler error");
         return -1;
     }
+    
     return ret;
 }
 
