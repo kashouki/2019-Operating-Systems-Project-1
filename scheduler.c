@@ -17,13 +17,6 @@
 #define PSJF    4
 #define ever    ;;
 
-typedef struct process{
-    int pid;
-    char name[32];
-    int t_ready;
-    int t_exec;
-}process;
-
 char S[8]; //scheduling policy
 int N; //number of processes
 
@@ -83,7 +76,13 @@ int main(int argc, char *argv[]) {
         }
         
         //select the next process
-        
+        int select = select_next_process(proc, N, policy, time);
+        if(select != -1 && running != next) {
+            wake_proc();
+            
+            running = next;
+            
+        }
         
         //time increment
         if(running != -1) {
