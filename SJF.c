@@ -57,7 +57,7 @@ int main(){
 	sigaction(SIGCHLD, &sig, NULL);
 
 	int nextproc = 0;
-
+	printf("startinggggggggggg");
 	for (int time = 0, i = N; i > 0; time++){
 		priority_ch(proc[nextproc].pid);
 		while(nextproc < N && time == proc[nextproc].t_ready){
