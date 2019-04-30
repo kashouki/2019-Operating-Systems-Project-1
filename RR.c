@@ -9,27 +9,28 @@
 #define TIME_QUANTUM 500
 
 int run;
-int queue[QUEUE_MAX_SIZE]; 
-int front=0, back=0;
-int time_counting=0, block;
+int queue[QUEUE_MAX_SIZE];
+int q_size = 0;
+int front = 0, back = 0;
+int time_counting = 0, block;
 int N;
 process* proc;
 
 void push_queue( int x ){
+    q_size++;
     back++;
     queue[back] = x;
 }
 
 void pop_queue(){
-    if(front<back) front++;
+    if(front<back) {
+        front++;
+        q_size--;
+    }
 }
 
 int front_queue(){
     return queue[front];
-}
-
-int queue_size(){
-    return back - front;
 }
 
 void sig_child( int signum ){
@@ -40,7 +41,9 @@ void sig_child( int signum ){
     run = 0;
     block = 0;
     time_counting = 0;
-    if( num_fin==N ) exit(0);
+    if( num_fin==N ) {
+        exit(0);
+    }
 }
 
 void incr_nextproc_priority(){
@@ -58,9 +61,9 @@ void run_nextproc(){
 }
 
 void priority_ch(){
-    if( !run && queue_size()>=1 )
+    if(run == 0 && q_size >= 1 )
       run_nextproc();
-    if( run && queue_size()>=2 )
+    if(run == 1 && q_size >= 2 )
       incr_nextproc_priority();
 }
 
@@ -89,11 +92,11 @@ int main(int argc, char *argv[]) {
         run_unit_time();
         time_counting++;
 
-        if( !block && run && time_counting==TIME_QUANTUM ){
-            int cur = front_queue();
-            pop_queue();
+        if(block == 0 && run == 1 && time_counting == TIME_QUANTUM ){
+            int cur = queue[front];
             proc[cur].t_exec -= TIME_QUANTUM;
             set_priority( proc[cur].pid, SCHED_FIFO, LOW_PRIORITY );
+            pop_queue();
             push_queue( cur );
             run = 0;
             priority_ch();
