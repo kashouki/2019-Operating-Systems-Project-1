@@ -42,7 +42,7 @@ void change_priority() {
 int main(void) {
     
     // init
-    int i = 0;
+    int i = 0, j = 0;
     scanf("%d", &N);
     proc = take_tasks(N);
     
@@ -59,13 +59,21 @@ int main(void) {
     sigaction(SIGCHLD, &act, NULL);
     
     
-    int time = 0;
+    int time = 0, start = 0, found = 0;
     
-    for (i=0; i<N; i++) {
-        if (proc[i].t_ready == time ) {
-            insert(diu, i, proc);
+    while (!fonud) {
+        for (i=0; i<N; i++) {
+            if (proc[i].t_ready == time ) {
+                insert(diu, i, proc);
+                proc[nextproc].t_ready = 9999999;
+                found = 1;
+            }
         }
+        time ++;
     }
+    
+    start = time;
+
     nextproc = heap_min(diu);
     remove_min(diu, proc);
     
@@ -73,13 +81,15 @@ int main(void) {
     while (1) {
         change_priority();
         
-        while (nextproc < N && time == (proc[nextproc].t_ready + proc[nextproc].t_exec)) {
+        while (nextproc < N && time == (start + proc[nextproc].t_exec)) {
             priority_down();
             create_proc(&proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
-            proc[nextproc].t_ready = 999999;
+            start += proc[nextproc].t_exec;
+
             for (int i=0; i<N; i++) {
                 if (proc[i].t_ready <= time ) {
                     insert(diu, i, proc);
+                    proc[nextproc].t_ready = 9999999;
                 }
             }
             nextproc = heap_min(diu);
