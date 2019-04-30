@@ -5,7 +5,7 @@
 #include <sys/wait.h>
 #include "functions.h"
 
-int N, nextproc = 0, workingon = 0;
+int N, nextproc = 0, workingon = 0, running = 0;
 process* proc;
 
 void sig_child(int signum)
@@ -24,7 +24,7 @@ void change_priority() {
         running = 1;
     }
     if (running != 0){
-        SET_PRIORITY(proc[nextproc+1].pid, SCHED_FIFO, PRIORITY_INIT);
+        SET_PRIORITY(proc[nextproc+1].pid, SCHED_FIFO, INIT_PRIORITY);
     }
 }
 
@@ -36,7 +36,7 @@ int main(void) {
     
     proc = take_tasks(N);
     
-    for (int i = 0; i < nproc; i++){
+    for (int i = 0; i < N; i++){
         proc[i].pid = -1;
     }
     
@@ -47,12 +47,12 @@ int main(void) {
     sigaction(SIGCHLD, &act, NULL);
     
     //F IFO
-    for (int time = 0, int i = N; i > 0; time++) {
+    for (int time = 0, i = N; i > 0; time++) {
         change_priority();
         
         while (nextproc < N && time == proc[nextproc].t_ready) {
             
-            create_process(&proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
+            create_proc(&proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
             nextproc ++;
             
             change_priority();
