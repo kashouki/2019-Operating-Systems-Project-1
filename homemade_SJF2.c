@@ -64,10 +64,11 @@ int nextP(struct process *proc, int numberOfProcess, int numberOfTime)
         if(proc[i].t_ready > numberOfTime) {
             break;
         }
-        if(ret == -1) {
-            
+        if(i == 0 && proc[i].t_exec != 0) {
+            return i;
         }
-        else if(proc[i].t_exec < proc[ret].t_exec) {
+        ret = 0;
+        if(proc[i].t_exec < proc[ret].t_exec) {
             ret = i;
         }
 	}
@@ -113,7 +114,7 @@ int main(int argc, char* argv[])
 				//proc_block(proc[run].pid);
 				run = next;
                 running = 1;
-                waitpid(proc[i].pid, NULL);
+                //waitpid(proc[i].pid, NULL);
 			}
 		}
     
