@@ -136,7 +136,10 @@ heap* create_heap() {
 }
 
 int heap_min(heap *hp) {
-    return hp->proc_idx[1];
+    if(hp->size!=0)
+        return hp->proc_idx[1];
+    else
+      return -1;
 }
 
 
