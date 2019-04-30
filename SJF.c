@@ -3,7 +3,9 @@
 #include <sys/wait.h>
 #include "functions.h"
 #include <stdlib.h>
+#include <sched.h>
 int running;
+int N;
 
 void sig_child(int signum){
 	static int num_done = 0;
@@ -40,14 +42,13 @@ void priority_ch(pid_t pid){
 
 /*=========================================================*/
 int main(){
-	int N;
 	scanf("%d",&N);
 
 	process* proc;
 	proc = take_tasks(N);
 
-	qsort(proc.t_exec, ordernum,sizeof(int), cmp_t_exec );
-	qsort(proc.t_ready, ordernum,sizeof(int), cmp_t_ready );
+	qsort(proc.t_exec, N,sizeof(int), cmp_t_exec );
+	qsort(proc.t_ready, N,sizeof(int), cmp_t_ready );
 
 	struct sigaction sig;
 	sig.sa_flags = 0;
