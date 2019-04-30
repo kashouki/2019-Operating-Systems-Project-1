@@ -7,9 +7,13 @@ void run_unit_time() {
     for(int i = 0; i < TIME_UNIT; i++);
 }
 
-//for function process* take_tasks();
-int cmp(const void *a, const void *b) {
+//cmp for sorting by t_ready
+int cmp_t_ready(const void *a, const void *b) {
     return ((process *)a)->t_ready - ((process *)b)->t_ready;
+}
+//cmp for sorting by t_exec
+int cmp_t_exec(const void *a, const void *b) {
+    return ((process *)a)->t_exec - ((process *)b)->t_exec;
 }
 
 //take input tasks. usage: process* proc = take_tasks();
@@ -20,6 +24,6 @@ process* take_tasks() {
     for(int i = 0; i < N; i++) {
         scanf("%s%d%d", proc[i].name, &proc[i].t_ready, &proc[i].t_exec);
     }
-    qsort(proc, N, sizeof(process), cmp);
+    qsort(proc, N, sizeof(process), cmp_t_ready);
     return proc;
 }

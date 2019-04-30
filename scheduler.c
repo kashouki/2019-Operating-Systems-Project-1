@@ -13,14 +13,8 @@
 #include <time.h>
 #include <signal.h>
 #include <sched.h>
-#include "process.h"
-#define FIFO    1
-#define RR      2
-#define SJF     3
-#define PSJF    4
+#include "functions.h"
 #define ever    ;;
-#define WAKE    1
-#define BLOCK   -1
 
 char S[8]; //scheduling policy
 int N; //number of processes
@@ -47,56 +41,3 @@ int main(int argc, char *argv[]) {
     }
     exit(0);
 }
-    
-    
-    
-    
-    
-    /*
-     
-     
-
-    
-     
-     
-     
-     
-     
-    int time = 0;
-    int running = -1;
-    int n_finished = 0;
-    
-    //start processes
-    for(ever) {
-        
-        //check current running process
-        if(running != -1 && proc[running].t_exec == 0) {
-            waitpid(proc[running].pid, NULL, 0);
-            running = -1;
-            n_finished++;
-            
-            if(n_finished == N) {
-                break;
-            }
-        }
-        
-        //select the next process
-        int select = select_next_process(proc, N, policy, time, running);
-        if(select != -1 && running != select) {
-            
-            running = select;
-            
-        }
-        
-        //time increment
-        
-        if(running != -1) {
-            proc[running].t_exec--;
-        }
-        time++;
-    }
-    
-    exit(0);
-}
-
-*/

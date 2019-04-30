@@ -13,10 +13,13 @@ typedef struct process {
 //run unit of time. usage: run_unit_time();
 void run_unit_time();
 
-//for function process* take_tasks();
-int cmp(const void *a, const void *b);
+//cmp for sorting by t_ready
+int cmp_t_ready(const void *a, const void *b);
 
-//take input tasks. usage: process* proc = take_tasks();
+//cmp for sorting by t_exec
+int cmp_t_exec(const void *a, const void *b)
+
+//take input tasks, tasks already sorted by t_ready. usage: process* proc = take_tasks();
 process* take_tasks();
 
 #endif
