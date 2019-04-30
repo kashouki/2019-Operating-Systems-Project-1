@@ -48,13 +48,14 @@ int main(void) {
     
     //F IFO
     for (int time = 0, i = N; i > 0; time++) {
-   
+        change_priority();
         
         while (nextproc < N && time == proc[nextproc].t_ready) {
             
             create_proc(&proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
             nextproc ++;
             
+            change_priority();
         }
         
 
