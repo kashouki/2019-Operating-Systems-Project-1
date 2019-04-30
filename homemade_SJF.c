@@ -61,7 +61,7 @@ int main(void) {
     
     int time = 0, start = 0, found = 0;
     
-    while (!fonud) {
+    while (!found) {
         for (i=0; i<N; i++) {
             if (proc[i].t_ready == time ) {
                 insert(diu, i, proc);
