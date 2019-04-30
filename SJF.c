@@ -12,6 +12,7 @@ void sig_child(int signum){
 	wait(NULL);
 	num_done++;
 	running = 0;
+	fprintf(stderr, "num_done : %d\n", num_done);
 	if(num_done == N){
 		exit(0);
 	}
@@ -43,7 +44,7 @@ void priority_ch(pid_t pid){
 /*=========================================================*/
 int main(){
 	scanf("%d",&N);
-	fprintf(stderr, "scanned");
+	fprintf(stderr, "scanned\n");
 	process* proc;
 	proc = take_tasks(N);
 	fprintf(stderr, "task taken\n");
@@ -67,7 +68,7 @@ int main(){
 			create_proc(&proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
 			nextproc ++;
 			priority_ch(proc[nextproc].pid);
-			fprintf(stderr, "%d\n", num_done);
+			fprintf(stderr, "Nextproc : %d\n", nextproc);
 		}
 		run_unit_time();
 	}
