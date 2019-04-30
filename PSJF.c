@@ -90,7 +90,7 @@ int proc_block(int pid)
 	int ret = sched_setscheduler(pid, SCHED_IDLE, &param);
 
 	if (ret < 0) {
-		perror("sched_setscheduler");
+		//perror("sched_setscheduler");
 		return -1;
 	}
 
@@ -107,7 +107,7 @@ int proc_wakeup(int pid)
 	int ret = sched_setscheduler(pid, SCHED_OTHER, &param);
 
 	if (ret < 0) {
-		perror("sched_setscheduler");
+		//perror("sched_setscheduler");
 		return -1;
 	}
 
@@ -136,7 +136,21 @@ int cmp(const void *a, const void *b) {
 }
 
 
+int next_process(struct process *proc, int nproc, int policy)
+{
+	/* Non-preemptive */
+	int ret = -1;
 
+	for (int i = 0; i < nproc; i++) {
+		if (proc[i].pid == -1 || proc[i].t_exec == 0)
+			continue;
+		if (ret == -1 || proc[i].t_exec < proc[ret].t_exec)
+			ret = i;
+	}
+
+
+	return ret;
+}
 
 
 
@@ -148,11 +162,17 @@ int main(int argc, char* argv[])
 	int nproc;
 	struct process *proc;
 
-	printf("hello");
-	scanf("%s", sched_policy);
+	//scanf("%s", sched_policy);
 	scanf("%d", &nproc);
-	printf("helloooo");
+	printf("%s\n", sched_policy);
 	proc = (struct process *)malloc(nproc * sizeof(struct process));
+
+
+	for (int i = 0; i < nproc; i++) {
+
+		scanf("%s %d %d", proc[i].name,&proc[i].t_ready, &proc[i].t_exec);
+
+	}
 
 	qsort(proc, nproc, sizeof(struct process), cmp);
 
@@ -177,9 +197,7 @@ int main(int argc, char* argv[])
 		/* Check if running process finish */
 		if (running != -1 && proc[running].t_exec == 0) {
 
-#ifdef DEBUG
-			fprintf(stderr, "%s finish at time %d.\n", proc[running].name, ntime);
-#endif
+			//printf("%s finish at time %d.\n", proc[running].name, ntime);
 			//kill(running, SIGKILL);
 			waitpid(proc[running].pid, NULL, 0);
 			printf("%s %d\n", proc[running].name, proc[running].pid);
@@ -196,28 +214,14 @@ int main(int argc, char* argv[])
 			if (proc[i].t_ready == ntime) {
 				proc[i].pid = proc_exec(proc[i]);
 				proc_block(proc[i].pid);
-#ifdef DEBUG
-				fprintf(stderr, "%s ready at time %d.\n", proc[i].name, ntime);
-#endif
+				//printf("%s ready at time %d.\n", proc[i].name, ntime);
 			}
 
 		}
 
 		/* Select next running  process */
 
-		int next;
-		if (running != -1) {
-			next = running;
-		}
-		else {
-			next = -1;
-				for (int i = 0; i < nproc; i++) {
-					if (proc[i].pid == -1 || proc[i].t_exec == 0)
-						continue;
-					if (next == -1 || proc[i].t_exec < proc[next].t_exec)
-						next = i;
-				}
-		}
+		int next = next_process(proc, nproc, policy);
 
 
 		if (next != -1) {
@@ -235,6 +239,7 @@ int main(int argc, char* argv[])
 		if (running != -1)
 			proc[running].t_exec--;
 		ntime++;
+		//printf("ntime %d\n", ntime);
 	}
 
 	return 0;
