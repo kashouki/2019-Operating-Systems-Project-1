@@ -53,6 +53,16 @@ int main(void) {
     sigfillset(&act.sa_mask);
     sigaction(SIGCHLD, &act, NULL);
     
+    
+    for (int j=0; j<N; j++) {
+        if (proc[j].t_ready <= time ) {
+            insert(diu, j, proc);
+            proc[j].t_ready = 999999;
+        }
+    }
+    nextproc = heap_min(diu);
+    remove_min(diu, proc);
+    
     //F IFOdasdasda
     for (int time = 0, i = N; i > 0; time++) {
         change_priority();
@@ -61,7 +71,7 @@ int main(void) {
             
             create_proc(&proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
             
-            for (int j=0; j<N; j++) {
+            for (int j=1; j<N; j++) {
                 if (proc[j].t_ready <= time ) {
                     insert(diu, j, proc);
                     proc[j].t_ready = 999999;
