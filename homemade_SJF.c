@@ -35,7 +35,7 @@ void change_priority() {
         running = 1;
     }
     if (running != 0){
-        int next_one = heap_min(diu)
+        int next_one = heap_min(diu);
         if (next_one != -1)
             set_priority(proc[next_one].pid, SCHED_FIFO, INIT_PRIORITY);//next?
     }
@@ -97,7 +97,7 @@ int main(void) {
             
             nextproc = heap_min(diu);
             if (nextproc == -1) {
-                t++; start++;
+                time++; start++;
                 break;
             }
             remove_min(diu, proc);
