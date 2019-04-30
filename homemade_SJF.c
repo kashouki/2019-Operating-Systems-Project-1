@@ -63,10 +63,10 @@ int main(void) {
             
             for (int j=0; j<N; j++) {
                 if (proc[j].t_ready <= time ) {
-                    insert(diu, j, proc[j]);
+                    insert(diu, j, proc);
                 }
             }
-            nextproc = heap.min(diu);
+            nextproc = heap_min(diu);
             remove_min(diu, proc);
             
             change_priority();
