@@ -1,14 +1,16 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "functions.h"
 
+//run unit of time. usage: run_unit_time();
+void run_unit_time() {
+    for(int i = 0; i < TIME_UNIT; i++);
+}
 
-
-
-typedef struct process {
-    pid_t pid;
-    char name[32];
-    int t_ready;
-    int t_exec;
-}process;
-
+//for function process* take_tasks();
+int cmp(const void *a, const void *b) {
+    return ((process *)a)->t_ready - ((process *)b)->t_ready;
+}
 
 //take input tasks. usage: process* proc = take_tasks();
 process* take_tasks() {
@@ -18,9 +20,6 @@ process* take_tasks() {
     for(int i = 0; i < N; i++) {
         scanf("%s%d%d", proc[i].name, &proc[i].t_ready, &proc[i].t_exec);
     }
+    qsort(proc, N, sizeof(process), cmp);
     return proc;
 }
-
-
-
-

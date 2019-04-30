@@ -27,7 +27,7 @@ int N; //number of processes
 
 int main(int argc, char *argv[]) {
     
-    //input
+    //take scheduling type and execute scheduling program
     scanf("%s", S);
     if(strcmp(S, "FIFO") == 0) {
         execl("./FIFO", "./FIFO", NULL);
@@ -54,19 +54,8 @@ int main(int argc, char *argv[]) {
     
     /*
      
-     //take tasks
-     scanf("%d", &N);
-     proc = (struct process *)malloc(N * sizeof(process*));
-     for(int i = 0; i < N; i++) {
-     scanf("%s%d%d", proc[i].name, &proc[i].t_ready, &proc[i].t_exec);
-     }
-     //sort processes by ready time
-     qsort(proc, N, sizeof(struct process), cmp);
      
-     
-     int cmp(const void *a, const void *b) {
-     return ((process *)a)->t_ready - ((process *)b)->t_ready;
-     }
+
     
      
      
