@@ -40,7 +40,7 @@ int proc_block(int pid)
 	return ret;
 }
 
-int nextP(struct process *proc, int numberOfProcess, int policy)
+int nextP(struct process *proc, int numberOfProcess)
 {
 	int ret = -1;
 	for (int i = 0; i < numberOfProcess; i++) {
@@ -54,8 +54,7 @@ int nextP(struct process *proc, int numberOfProcess, int policy)
 
 int main(int argc, char* argv[])
 {
-	int policy,numberOfProcess;
-	char sched_policy[256];
+	int numberOfProcess;
 	struct process *proc;
 
 	scanf("%d", &numberOfProcess);
@@ -87,7 +86,7 @@ int main(int argc, char* argv[])
 			}
 
 		}
-		int next = nextP(proc, numberOfProcess, policy);
+		int next = nextP(proc, numberOfProcess);
 		if (next != -1) {
 			if (run != next) {
 				proc_wakeup(proc[next].pid);
