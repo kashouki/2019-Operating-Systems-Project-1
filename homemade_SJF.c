@@ -42,13 +42,13 @@ void change_priority() {
 int main(void) {
     
     // init
-    
+    int i = 0;
     scanf("%d", &N);
     proc = take_tasks(N);
     
     heap* diu = create_heap();
     
-    for (int i = 0; i < N; i++){
+    for (i = 0; i < N; i++){
         proc[i].pid = -1;
     }
     
@@ -59,7 +59,7 @@ int main(void) {
     sigaction(SIGCHLD, &act, NULL);
     
     
-    for (int i=0; i<N; i++) {
+    for (i=0; i<N; i++) {
         if (proc[i].t_ready <= time ) {
             insert(diu, i, proc);
             proc[i].t_ready = 999999;
