@@ -35,7 +35,7 @@ void change_priority() {
         running = 1;
     }
     if (running != 0){
-        set_priority(proc[nextproc+1].pid, SCHED_FIFO, INIT_PRIORITY);
+        set_priority(proc[nextproc+1].pid, SCHED_FIFO, INIT_PRIORITY);//next?
     }
 }
 
@@ -59,9 +59,10 @@ int main(void) {
     sigaction(SIGCHLD, &act, NULL);
     
     
-    int time = 0, start = 0, found = 0;
+    int time = -1, start = 0, found = 0;
     
     while (!found) {
+        time ++;
         for (i=0; i<N; i++) {
             if (proc[i].t_ready == time ) {
                 insert(diu, i, proc);
@@ -69,7 +70,6 @@ int main(void) {
                 found = 1;
             }
         }
-        time ++;
     }
     
     start = time;
@@ -93,6 +93,7 @@ int main(void) {
                 }
             }
             nextproc = heap_min(diu);
+            if (nextproc == -1) break;
             remove_min(diu, proc);
             
             change_priority();
