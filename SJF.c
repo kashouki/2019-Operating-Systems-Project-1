@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-#include <stdio.h>
-
-int main(int argc, char *argv[]) {
-    exit(0);
-}
-=======
 #include <stdio.h>
 #include<stdlib.h>
 #include <pthread.h>
@@ -46,6 +39,3 @@ int main(){
 	}
 	
 }
-
-
->>>>>>> 3b4c0bc6da13cd355fff76212b93a1b02a3e702e
