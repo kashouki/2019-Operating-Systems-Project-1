@@ -128,14 +128,25 @@ int main(int argc, char* argv[])
 	struct process *proc;
 
 	//scanf("%s", sched_policy);
+    
+    
+    
 	scanf("%d", &numberOfProcess);
-	printf("%s\n", sched_policy);
-	proc = (struct process *)malloc(numberOfProcess * sizeof(struct process));
-
+	//printf("%s\n", sched_policy);
+	//proc = (struct process *)malloc(numberOfProcess * sizeof(struct process));
+    
+    
+    proc = take_tasks(numberOfProcess);
+    
+    /*
 	for (int i = 0; i < numberOfProcess; i++) 
 		scanf("%s %d %d", proc[i].name,&proc[i].t_ready, &proc[i].t_exec);
 
 	qsort(proc, numberOfProcess, sizeof(struct process), cmp);
+    */
+    
+    
+    
 
 	for (int i = 0; i < numberOfProcess; i++)
 		proc[i].pid = -1;
@@ -157,7 +168,7 @@ int main(int argc, char* argv[])
 		}
 		for (int i = 0; i < numberOfProcess; i++) {
 			if (proc[i].t_ready == numberOfTime) {
-				proc[i].pid = proc_exec(proc[i]);
+				//proc[i].pid = proc_exec(proc[i]);
                 create_proc(&proc[i].pid, proc[i].name, i, proc[i].t_exec);
 				proc_block(proc[i].pid);
 			}
