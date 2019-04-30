@@ -35,7 +35,9 @@ int main(int argc, char *argv[]) {
     }
     clock_gettime(CLOCK_REALTIME, &t_finish);
     
-    //printk(KERN_INFO, "[Project1] %d %ld.%ld %ld.%ld\n", pid, t_start.tv_sec, t_start.tv_nsec, t_finish.tv_sec, t_finish.tv_nsec);
+    char dmesg_buff[512];
+    sprintf(dmesg_buff, "[project1] %d %lu.%09lu %lu.%09lu\n", pid, t_start.tv_sec, t_start.tv_nsec, t_finish.tv_sec, t_finish.tv_nsec);
+    syscall(PRINTK, dmesg_buff);
     
     exit(0);
 }

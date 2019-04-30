@@ -8,6 +8,7 @@ typedef struct process {
     char name[32];
     int t_ready;
     int t_exec;
+    int t_comp;
 }process;
 
 //run unit of time. usage: run_unit_time();
