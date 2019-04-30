@@ -25,43 +25,54 @@
 char S[8]; //scheduling policy
 int N; //number of processes
 
-int cmp(const void *a, const void *b) {
-    return ((process *)a)->t_ready - ((process *)b)->t_ready;
-}
-
 int main(int argc, char *argv[]) {
-    
-    int policy = 0;
-    process *proc;
     
     //input
     scanf("%s", S);
     if(strcmp(S, "FIFO") == 0) {
-        policy = FIFO;
+        execl("./FIFO", "./FIFO", NULL);
     }
     else if(strcmp(S, "RR") == 0) {
-        policy = RR;
+        execl("./RR", "./RR", NULL);
     }
     else if(strcmp(S, "SJF") == 0) {
-        policy = SJF;
+        execl("./SJF", "./SJF", NULL);
     }
     else if(strcmp(S, "PSJF") == 0) {
-        policy = PSJF;
+        execl("./PSJF", "./PSJF", NULL);
     }
     else {
         fprintf(stderr, "Invalid scheduling policy: %s\n", S);
-        exit(0);
+        exit(1);
     }
+    exit(0);
+}
     
-    scanf("%d", &N);
-    proc = (struct process *)malloc(N * sizeof(process*));
-    for(int i = 0; i < N; i++) {
-        scanf("%s%d%d", proc[i].name, &proc[i].t_ready, &proc[i].t_exec);
-    }
     
-    //sort processes by ready time
-    qsort(proc, N, sizeof(struct process), cmp);
     
+    
+    
+    /*
+     
+     //take tasks
+     scanf("%d", &N);
+     proc = (struct process *)malloc(N * sizeof(process*));
+     for(int i = 0; i < N; i++) {
+     scanf("%s%d%d", proc[i].name, &proc[i].t_ready, &proc[i].t_exec);
+     }
+     //sort processes by ready time
+     qsort(proc, N, sizeof(struct process), cmp);
+     
+     
+     int cmp(const void *a, const void *b) {
+     return ((process *)a)->t_ready - ((process *)b)->t_ready;
+     }
+    
+     
+     
+     
+     
+     
     int time = 0;
     int running = -1;
     int n_finished = 0;
@@ -98,3 +109,5 @@ int main(int argc, char *argv[]) {
     
     exit(0);
 }
+
+*/
