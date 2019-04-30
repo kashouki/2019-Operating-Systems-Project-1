@@ -58,3 +58,5 @@ process* take_tasks(int N) {
     qsort(proc, N, sizeof(process), cmp_t_ready);
     return proc;
 }
+
+
