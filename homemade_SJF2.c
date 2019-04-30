@@ -99,7 +99,6 @@ int main(int argc, char* argv[])
     sigfillset(&act.sa_mask);
     sigaction(SIGCHLD, &act, NULL);
 
-	assign_cpu(getpid(), PARENT_CPU);
 	proc_wakeup(getpid());
 	numberOfTime = 0;
 	run = -1;
