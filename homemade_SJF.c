@@ -58,29 +58,28 @@ int main(void) {
     sigfillset(&act.sa_mask);
     sigaction(SIGCHLD, &act, NULL);
     
+    
     int time = 0;
+    
     for (i=0; i<N; i++) {
-        if (proc[i].t_ready <= time ) {
+        if (proc[i].t_ready == time ) {
             insert(diu, i, proc);
-            proc[i].t_ready = 999999;
         }
     }
     nextproc = heap_min(diu);
     remove_min(diu, proc);
     
     //F IFOdasdasda
-    time = 0;
-    for (;;) {
+    while (1) {
         change_priority();
         
         while (nextproc < N && time == (proc[nextproc].t_ready + proc[nextproc].t_exec)) {
             priority_down();
             create_proc(&proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
-            
-            for (int i=1; i<N; i++) {
+            proc[nextproc].t_ready = 999999;
+            for (int i=0; i<N; i++) {
                 if (proc[i].t_ready <= time ) {
                     insert(diu, i, proc);
-                    proc[i].t_ready = 999999;
                 }
             }
             nextproc = heap_min(diu);
