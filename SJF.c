@@ -1,12 +1,10 @@
 #include <stdio.h>
 #include <signal.h>
 #include <sys/wait.h>
-
+#include "functions.h"
+#include <stdlib.h>
 int running;
 
-int compare(const void 8A, const void *b){
-	return ( *(int*)a - *(int*)b );
-}
 void child(){
 	static int num_done = 0;
 	wait(NULL);
@@ -49,8 +47,8 @@ int main(){
 	process* proc;
 	proc = take_tasks(N);
 
-	qsort(proc.t_exec, ordernum,sizeof(int), compare );
-	qsort(proc.t_ready, ordernum,sizeof(int), compare );
+	qsort(proc.t_exec, ordernum,sizeof(int), cmp_t_exec );
+	qsort(proc.t_ready, ordernum,sizeof(int), cmp_t_ready );
 
 	child();
 
