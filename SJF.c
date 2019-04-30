@@ -43,8 +43,8 @@ int main(){
 	proc = take_tasks(N);
 
 	
-	/*qsort(proc, N,sizeof(int), cmp_t_ready );*/
-	qsort(proc, N,sizeof(int), cmp_t_exec );
+	qsort(proc, N,sizeof(process), cmp_t_ready );
+	qsort(proc, N,sizeof(process), cmp_t_exec );
 
 	fprintf(stderr, "sorted\n");
 
