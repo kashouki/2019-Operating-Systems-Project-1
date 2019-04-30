@@ -1,62 +1,4 @@
-// /*#include <stdio.h>
-// #include <stdlib.h>
-// #include "functions.c"
-
-// bool compare(process a,process b)
-// {
-// 	return a.t_ready<b.t_ready;
-// }
-
-// bool compare2(process a,process b)
-// {
-// 	return a.t_exec<b.t_exec;
-// 	/* This Schedule will always return TRUE
-// 	if above condition comes*/
-// }
-
-// int main(int argc, char *argv[]) {
-//     int 
-//     int N;
-//     scanf("%d", &N);
-//     process* proc;
-//     proc = take_tasks(N);
-    
-//     sort(proc,proc+N,compare);
-//     i=0;
-//     pcom=0;
-//     while(pcom<N){
-//         for(j=0;j<n;j++)
-// 		{
-// 			if(proc[j].t_ready>i)
-// 			break;
-// 		}
-//         sort(proc,proc+j,compare2);
-        
-//         if(j>0)
-// 		{
-
-// 			for(j=0;j<n;j++)
-// 			{
-// 				if(proc[j].t_exec!=0)
-// 				break;
-// 			}
-// 			if(proc[j].t_ready>i)
-// 				i=proc[j].t_ready;
-// 			//proc[j].ct=i+1;
-// 			proc[j].exec--;
-// 		}
-//         i++;
-// 		pcom=0;
-// 		for(j=0;j<N;j++)
-// 		{
-// 			if(proc[j].t_exec==0)
-// 			pcom++;
-// 		}
-//     }
-//     exit(0);
-// }
-// */
-	#define _GNU_SOURCE
+#define _GNU_SOURCE
 #include <stdlib.h>
 #include <signal.h>
 #include <stdio.h>
@@ -69,6 +11,23 @@
 #include <sys/syscall.h>
 #define GET_TIME 314
 #define PRINTK 315
+#define CHILD_CPU 1
+#define PARENT_CPU 0
+
+/* Running one unit time */
+#define UNIT_T()				\
+{						\
+	volatile unsigned long i;		\
+	for (i = 0; i < 1000000UL; i++);	\
+}			
+
+typedef struct process {
+	pid_t pid;
+	char name[32];
+	int t_ready;
+	int t_exec;
+	int t_comp;
+}process;
 
 int proc_assign_cpu(int pid, int core)
 {
@@ -80,7 +39,7 @@ int proc_assign_cpu(int pid, int core)
 	cpu_set_t mask;
 	CPU_ZERO(&mask);
 	CPU_SET(core, &mask);
-		
+
 	if (sched_setaffinity(pid, sizeof(mask), &mask) < 0) {
 		perror("sched_setaffinity");
 		exit(1);
@@ -114,7 +73,7 @@ int proc_exec(struct process proc)
 		syscall(PRINTK, to_dmesg);
 		exit(0);
 	}
-	
+
 	/* Assign child to another core prevent from interupted by parant */
 	proc_assign_cpu(pid, CHILD_CPU);
 
@@ -124,14 +83,14 @@ int proc_exec(struct process proc)
 int proc_block(int pid)
 {
 	struct sched_param param;
-	
+
 	/* SCHED_IDLE should set priority to 0 */
 	param.sched_priority = 0;
 
 	int ret = sched_setscheduler(pid, SCHED_IDLE, &param);
-	
+
 	if (ret < 0) {
-		perror("sched_setscheduler");
+		//perror("sched_setscheduler");
 		return -1;
 	}
 
@@ -141,14 +100,14 @@ int proc_block(int pid)
 int proc_wakeup(int pid)
 {
 	struct sched_param param;
-	
+
 	/* SCHED_OTHER should set priority to 0 */
 	param.sched_priority = 0;
 
 	int ret = sched_setscheduler(pid, SCHED_OTHER, &param);
-	
+
 	if (ret < 0) {
-		perror("sched_setscheduler");
+		//perror("sched_setscheduler");
 		return -1;
 	}
 
@@ -177,23 +136,44 @@ int cmp(const void *a, const void *b) {
 }
 
 
+int next_process(struct process *proc, int nproc, int policy)
+{
+	/* Non-preemptive */
+	int ret = -1;
+
+	for (int i = 0; i < nproc; i++) {
+		if (proc[i].pid == -1 || proc[i].t_exec == 0)
+			continue;
+		if (ret == -1 || proc[i].t_exec < proc[ret].t_exec)
+			ret = i;
+	}
+
+
+	return ret;
+}
 
 
 
 
-
-int main(void)
+int main(int argc, char* argv[])
 {
 	char sched_policy[256];
 	int policy;
 	int nproc;
 	struct process *proc;
 
-	scanf("%s", sched_policy);
+	//scanf("%s", sched_policy);
 	scanf("%d", &nproc);
-	
+	printf("%s\n", sched_policy);
 	proc = (struct process *)malloc(nproc * sizeof(struct process));
-	
+
+
+	for (int i = 0; i < nproc; i++) {
+
+		scanf("%s %d %d", proc[i].name,&proc[i].t_ready, &proc[i].t_exec);
+
+	}
+
 	qsort(proc, nproc, sizeof(struct process), cmp);
 
 	/* Initial pid = -1 imply not ready */
@@ -202,24 +182,22 @@ int main(void)
 
 	/* Set single core prevent from preemption */
 	proc_assign_cpu(getpid(), PARENT_CPU);
-	
+
 	/* Set high priority to scheduler */
 	proc_wakeup(getpid());
-	
+
 	/* Initial scheduler */
 	ntime = 0;
 	running = -1;
 	finish_cnt = 0;
-	
-	while(1) {
+
+	while (1) {
 		//fprintf(stderr, "Current time: %d\n", ntime);
 
 		/* Check if running process finish */
 		if (running != -1 && proc[running].t_exec == 0) {
-		
-#ifdef DEBUG
-			fprintf(stderr, "%s finish at time %d.\n", proc[running].name, ntime);
-#endif
+
+			//printf("%s finish at time %d.\n", proc[running].name, ntime);
 			//kill(running, SIGKILL);
 			waitpid(proc[running].pid, NULL, 0);
 			printf("%s %d\n", proc[running].name, proc[running].pid);
@@ -236,29 +214,16 @@ int main(void)
 			if (proc[i].t_ready == ntime) {
 				proc[i].pid = proc_exec(proc[i]);
 				proc_block(proc[i].pid);
-#ifdef DEBUG
-				fprintf(stderr, "%s ready at time %d.\n", proc[i].name, ntime);
-#endif
+				//printf("%s ready at time %d.\n", proc[i].name, ntime);
 			}
 
 		}
 
 		/* Select next running  process */
-		
-		
-		if (running != -1){
-			next = running;
-		}else{
-			next = -1
-			for (int i = 0; i < nproc; i++) {
-				if (proc[i].pid == -1 || proc[i].t_exec == 0)
-					continue;
-				if (ret == -1 || proc[i].t_exec < proc[ret].t_exec)
-					next = i;
-			}
-		}
 
-		
+		int next = next_process(proc, nproc, policy);
+
+
 		if (next != -1) {
 			/* Context switch */
 			if (running != next) {
@@ -274,6 +239,7 @@ int main(void)
 		if (running != -1)
 			proc[running].t_exec--;
 		ntime++;
+		//printf("ntime %d\n", ntime);
 	}
 
 	return 0;

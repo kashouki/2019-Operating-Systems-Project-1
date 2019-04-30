@@ -11,10 +11,10 @@ typedef struct process {
     int t_comp;
 }process;
 
-typedef struct heap {
-    int proc_idx[1000001];
-    int size;
-}
+typedef struct heap{
+  int proc_idx[1000001];
+  int size;
+}heap;
 
 //run unit of time. usage: run_unit_time();
 void run_unit_time();
@@ -36,3 +36,23 @@ void create_proc(pid_t* pid, char name[], int idx, int t_exec);
 
 //take input tasks, tasks already sorted by t_ready. usage: (process*) proc = take_tasks(N);
 process* take_tasks(int N);
+
+void swap(int *x, int *y);
+
+int parent(int x);
+
+int left(int x);
+
+int right(int x);
+
+void bub_up(process* proc);
+
+void bub_down(process* proc);
+
+void remove_min(process* proc);
+
+void insert(int x, process* proc);
+
+heap* create_heap();
+
+int heap_min(heap *hp);
