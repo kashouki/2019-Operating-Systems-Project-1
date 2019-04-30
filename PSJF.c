@@ -40,11 +40,7 @@ int main(int argc, char *argv[]) {
 				break;
 			}
 			if(proc[j].t_ready>i)
-
-			{
 				i=proc[j].t_ready;
-
-			}
 			proc[j].ct=i+1;
 			proc[j].exec--;
 		}
