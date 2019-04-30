@@ -107,7 +107,7 @@ void bub_down(heap* hp, process* proc){
         int r = right(cur);
         int min = (proc[hp->proc_idx[r]].t_exec < proc[hp->proc_idx[l]].t_exec)? r:l;
         if( proc[hp->proc_idx[cur]].t_exec > proc[hp->proc_idx[min]].t_exec ){
-            swap(&hp->proc_idx[cur],&hp->proc_idx[l]);
+            swap(&hp->proc_idx[cur],&hp->proc_idx[min]);
             cur = min;
         }
         else{
