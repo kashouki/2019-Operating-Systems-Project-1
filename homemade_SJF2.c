@@ -70,13 +70,6 @@ int nextP(struct process *proc, int numberOfProcess, int numberOfTime)
         else if(proc[i].t_exec < proc[ret].t_exec) {
             ret = i;
         }
-        
-        /*
-		if (proc[i].pid == -1 || proc[i].t_exec == 0)
-			continue;
-		if (ret == -1 || proc[i].t_exec < proc[ret].t_exec)
-			ret = i;
-         */
 	}
 	return ret;
 }
@@ -103,17 +96,6 @@ int main(int argc, char* argv[])
 	countFinishing = 0;
 
 	for(ever) {
-        /*
-		if (run != -1) {
-			//waitpid(proc[run].pid, NULL, 0);
-			//printf("%s %d\n", proc[run].name, proc[run].pid);
-			run = -1;
-			countFinishing++;
-            fprintf(stderr, "cf: %d, n: %d", countFinishing, numberOfProcess);
-			if (countFinishing == numberOfProcess)
-				break;
-		}
-         */
 		for (int i = 0; i < numberOfProcess; i++) {
 			if (proc[i].t_ready == numberOfTime) {
                 create_proc(&proc[i].pid, proc[i].name, i, proc[i].t_exec);
@@ -125,6 +107,7 @@ int main(int argc, char* argv[])
 		int next = nextP(proc, numberOfProcess, numberOfTime);
 		if (next != -1) {
 			if (run != next) {
+                fprintf(stderr, "I choose you %s!\n", proc[next].name);
 				proc_wakeup(proc[next].pid);
 				//proc_block(proc[run].pid);
 				run = next;
