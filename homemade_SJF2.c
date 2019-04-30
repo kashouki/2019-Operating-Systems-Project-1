@@ -113,6 +113,7 @@ int main(int argc, char* argv[])
 				//proc_block(proc[run].pid);
 				run = next;
                 running = 1;
+                waitpid(proc[i].pid, NULL);
 			}
 		}
     
