@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "functions.c"
 
 bool compare(process a,process b)
 {
