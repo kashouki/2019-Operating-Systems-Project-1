@@ -60,7 +60,7 @@ int nextP(struct process *proc, int numberOfProcess, int numberOfTime)
     }
     
 	for (int i = 0; i < numberOfProcess; i++) {
-        if(proc[i].t_ready > numberofTime) {
+        if(proc[i].t_ready > numberOfTime) {
             break;
         }
         if(ret == -1) {
@@ -125,7 +125,7 @@ int main(int argc, char* argv[])
 
 		}
     
-		int next = nextP(proc, numberOfProcess);
+		int next = nextP(proc, numberOfProcess, numberOfTime);
 		if (next != -1) {
 			if (run != next) {
 				proc_wakeup(proc[next].pid);
