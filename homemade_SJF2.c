@@ -52,7 +52,7 @@ int proc_block(int pid)
 }
 
 
-int nextP(struct process *proc, int numberOfProcess)
+int nextP(struct process *proc, int numberOfProcess, int numberOfTime)
 {
 	int ret = -1;
     if(running == 1) {
@@ -60,10 +60,22 @@ int nextP(struct process *proc, int numberOfProcess)
     }
     
 	for (int i = 0; i < numberOfProcess; i++) {
+        if(proc[i].t_ready > numberofTime) {
+            break;
+        }
+        if(ret == -1) {
+            
+        }
+        else if(proc[i].t_exec < proc[ret].t_exec) {
+            ret = i;
+        }
+        
+        /*
 		if (proc[i].pid == -1 || proc[i].t_exec == 0)
 			continue;
 		if (ret == -1 || proc[i].t_exec < proc[ret].t_exec)
 			ret = i;
+         */
 	}
 	return ret;
 }
