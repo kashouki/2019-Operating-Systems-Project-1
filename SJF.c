@@ -47,22 +47,22 @@ int main(){
 	process* proc;
 	proc = take_tasks(N);
 
-	qsort(proc.t_exec, N,sizeof(int), cmp_t_exec );
-	qsort(proc.t_ready, N,sizeof(int), cmp_t_ready );
+	qsort(proc, N,sizeof(int), cmp_t_exec );
+	qsort(proc, N,sizeof(int), cmp_t_ready );
 
 	struct sigaction sig;
 	sig.sa_flags = 0;
-	sig.sa_handler = child;
+	sig.sa_handler = sig_child;
 	sigfillset(&sig.sa_mask);
 	sigaction(SIGCHLD, &sig, NULL);
 
 	int nextproc = 0;
 
 	for (int time = 0, i = N; i > 0; time++){
-		priority_ch(proc[nextproc]);
+		priority_ch(proc[nextproc].pid);
 		while(nextproc < N && time == proc[nextproc].t_ready){
 			priority_down(proc[nextproc].pid);
-			create_proc(proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
+			create_proc(&proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
 			nextproc ++;
 			priority_ch(proc[nextproc].pid);
 		}
