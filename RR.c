@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <sys/wait.h>
-#include "functions.c"
+#include <sched.h>
+#include "functions.h"
 
 #define QUEUE_MAX_SIZE 1000007
 #define TIME_QUANTUM 500
