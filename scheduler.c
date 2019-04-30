@@ -22,7 +22,7 @@ int N; //number of processes
 int main(int argc, char *argv[]) {
     
     assign_cpu(getpid(), 0);
-    
+    set_priority(getpid(), SCHED_FIFO, INIT_PRIORITY);
     
     //take scheduling type and execute scheduling program
     scanf("%s", S);

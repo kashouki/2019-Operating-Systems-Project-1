@@ -23,7 +23,7 @@ int cmp_t_exec(const void *a, const void *b);
 void assign_cpu(pid_t pid, int cpu);
 
 //set process priority
-void set_priority(pid_t pid, int policy, int priority)
+void set_priority(pid_t pid, int policy, int priority);
 
 //create a process for a task.
 void create_proc(pid_t* pid, char name[], int idx, int t_exec);

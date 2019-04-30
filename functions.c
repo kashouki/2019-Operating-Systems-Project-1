@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include<stdlib.h>
 #include <pthread.h>
@@ -41,7 +42,7 @@ void assign_cpu(pid_t pid, int cpu) {
 
 //set process priority. USE int policy AS THE FUNCTION ITSELF DEFINES, SEE MANUAL; int priority DEFINED IN functions.h
 void set_priority(pid_t pid, int policy, int priority) {
-    strcut sched_param param;
+    struct sched_param param;
     param.sched_priority = priority;
     sched_setscheduler(pid, policy, &param);
 }
@@ -60,7 +61,8 @@ void create_proc(pid_t* pid, char name[], int idx, int t_exec) {
         execl("./process", "./process", name, IDX, T_EXEC);
     }
     else if(*pid > 0) {//parent
-        assign_cpu(*pid, 1)
+        assign_cpu(*pid, 1);
+        set_priority(*pid, SCHED_FIFO, LOW_PRIORITY);
     }
 }
 
