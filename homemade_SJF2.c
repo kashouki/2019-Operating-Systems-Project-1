@@ -18,6 +18,14 @@
 
 static int last,numberOfTime, run, countFinishing;
 
+void sig_child(int signum)
+{
+    static int finished = 0;
+    wait(NULL);
+    ++finished;
+    if (finished == N) exit(0);
+}
+
 int proc_wakeup(int pid)
 {
 	struct sched_param param;
@@ -66,6 +74,12 @@ int main(int argc, char* argv[])
 
 	for (int i = 0; i < numberOfProcess; i++)
 		proc[i].pid = -1;
+
+  struct sigaction act;
+    act.sa_flags = 0;
+    act.sa_handler = sig_child;
+    sigfillset(&act.sa_mask);
+    sigaction(SIGCHLD, &act, NULL);
 
 	assign_cpu(getpid(), PARENT_CPU);
 	proc_wakeup(getpid());
