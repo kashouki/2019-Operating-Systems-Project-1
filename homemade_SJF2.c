@@ -18,12 +18,14 @@
 
 static int last,numberOfTime, run, countFinishing;
 int numberOfProcess;
+int running = 0;
 
 void sig_child(int signum)
 {
     static int finished = 0;
     wait(NULL);
     finished++;
+    running = 0;
     if (finished == numberOfProcess) exit(0);
 }
 
@@ -49,10 +51,14 @@ int proc_block(int pid)
 	return ret;
 }
 
-/*
+
 int nextP(struct process *proc, int numberOfProcess, int policy)
 {
 	int ret = -1;
+    if(running == 1) {
+        return ret;
+    }
+    
 	for (int i = 0; i < numberOfProcess; i++) {
 		if (proc[i].pid == -1 || proc[i].t_exec == 0)
 			continue;
@@ -61,7 +67,7 @@ int nextP(struct process *proc, int numberOfProcess, int policy)
 	}
 	return ret;
 }
-*/
+
 
 int main(int argc, char* argv[])
 {
@@ -104,20 +110,19 @@ int main(int argc, char* argv[])
 			}
 
 		}
-    /*
+    
 		int next = nextP(proc, numberOfProcess, policy);
 		if (next != -1) {
 			if (run != next) {
 				proc_wakeup(proc[next].pid);
 				proc_block(proc[run].pid);
 				run = next;
+                running = 1;
 				last = numberOfTime;
 			}
 		}
-    */
+    
 		run_unit_time();
-		if (run != -1)
-			proc[run].t_exec--;
 		numberOfTime++;
 	}
 	return 0;
