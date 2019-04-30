@@ -26,6 +26,7 @@ void sig_child(int signum)
     wait(NULL);
     finished++;
     running = 0;
+    run = -1;
     if (finished == numberOfProcess) exit(0);
 }
 
@@ -89,10 +90,7 @@ int main(int argc, char* argv[])
 	scanf("%d", &numberOfProcess);
     
     proc = take_tasks(numberOfProcess);
-
-	for (int i = 0; i < numberOfProcess; i++)
-		proc[i].pid = -1;
-
+    
   struct sigaction act;
     act.sa_flags = 0;
     act.sa_handler = sig_child;
