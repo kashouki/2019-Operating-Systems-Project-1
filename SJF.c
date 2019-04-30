@@ -4,6 +4,7 @@
 #include "functions.h"
 #include <stdlib.h>
 #include <sched.h>
+#define ever ;;
 int running = 0; int nextproc = 0; int N;
 
 process* proc;
@@ -54,7 +55,8 @@ int main(){
 	/*fprintf(stderr, "signal\n");*/
 
 	/*fprintf(stderr, "startinggggggggggg\n");*/
-	for (int time = 0, i = N; i > 0; time++){
+    int time = 0;
+	for(ever){
 		priority_ch();
 		while(nextproc < N && time == proc[nextproc].t_ready){
 			priority_down();
@@ -65,5 +67,6 @@ int main(){
 			/*fprintf(stderr, "Nextproc_B : %d\n", nextproc);*/
 		}
 		run_unit_time();
+        time++;
 	}
 }
