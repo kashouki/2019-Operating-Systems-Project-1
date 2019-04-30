@@ -124,7 +124,7 @@ int main(int argc, char* argv[])
 	char sched_policy[256];
 	struct process *proc;
 
-	scanf("%s", sched_policy);
+	//scanf("%s", sched_policy);
 	scanf("%d", &numberOfProcess);
 	printf("%s\n", sched_policy);
 	proc = (struct process *)malloc(numberOfProcess * sizeof(struct process));
