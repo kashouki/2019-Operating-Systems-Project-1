@@ -6,15 +6,10 @@
 #include "functions.h"
 #define ever ;;
 
+
 int N, nextproc = 0, workingon = 0, running = 0;
 process* proc;
 
-int cmp_sum(const void *a, const void *b) {
-    return (((process *)a)->t_ready - ((process *)b)->t_ready) +
-    (((process *)a)->t_exec - ((process *)b)->t_exec);
-}
-
-    
 void sig_child(int signum)
 {
     static int finished = 0;
@@ -38,12 +33,10 @@ void change_priority() {
 int main(void) {
     
     // init
-
+    
     scanf("%d", &N);
     
     proc = take_tasks(N);
-    
-    qsort(proc, N, sizeof(process), cmp_sum);
     
     for (int i = 0; i < N; i++){
         proc[i].pid = -1;
@@ -63,12 +56,15 @@ int main(void) {
         while (nextproc < N && time == proc[nextproc].t_ready) {
             
             create_proc(&proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
-            nextproc++;
+            nextproc ++;
             
             change_priority();
         }
+        
+        
         run_unit_time();
         time++;
     }
     exit(0);
 }
+
