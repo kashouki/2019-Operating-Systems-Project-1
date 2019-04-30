@@ -20,6 +20,6 @@ int cmp_t_ready(const void *a, const void *b);
 int cmp_t_exec(const void *a, const void *b)
 
 //take input tasks, tasks already sorted by t_ready. usage: process* proc = take_tasks();
-process* take_tasks();
+process* take_tasks(int N);
 
 #endif

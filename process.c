@@ -15,12 +15,11 @@
 #include <sched.h>
 #define ever    ;;
 
-//usage: execl("./process, "./process", name, index, t_start, t_exec);
+//usage: execl("./process, "./process", name, index, t_exec);
 int main(int argc, char *argv[]) {
     char *name = argv[1];
     int idx = atoi(argv[2]);
-    int t_start = atoi(argv[3]);
-    int t_exec; = atoi(argv[4]);
+    int t_exec = atoi(argv[3]);
     
     for(int i = 0; i < t_exec; i++) {
         run_unit_time();
