@@ -11,6 +11,11 @@ typedef struct process {
     int t_comp;
 }process;
 
+typedef struct heap {
+    int size;
+    process* node;
+}heap;
+
 //run unit of time. usage: run_unit_time();
 void run_unit_time();
 

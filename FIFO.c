@@ -5,6 +5,7 @@
 #include <sys/wait.h>
 #include "functions.h"
 
+
 int N, nextproc = 0, workingon = 0, running = 0;
 process* proc;
 
