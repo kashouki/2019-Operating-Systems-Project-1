@@ -46,16 +46,16 @@ int main(){
 
 	process* proc;
 	proc = take_tasks(N);
-
+	printf("task taken");
 	qsort(proc, N,sizeof(int), cmp_t_exec );
 	qsort(proc, N,sizeof(int), cmp_t_ready );
-
+	printf("sorted");
 	struct sigaction sig;
 	sig.sa_flags = 0;
 	sig.sa_handler = sig_child;
 	sigfillset(&sig.sa_mask);
 	sigaction(SIGCHLD, &sig, NULL);
-
+	printf("signal");
 	int nextproc = 0;
 	printf("startinggggggggggg");
 	for (int time = 0, i = N; i > 0; time++){
