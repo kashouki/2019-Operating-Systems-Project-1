@@ -13,7 +13,6 @@
 #include <time.h>
 #include <signal.h>
 #include <sched.h>
-#include "process.h"
 #define ever    ;;
 
 //usage: execl("./process, "./process", name, index, t_start, t_exec);
