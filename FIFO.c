@@ -46,7 +46,7 @@ int main(void) {
     sigfillset(&act.sa_mask);
     sigaction(SIGCHLD, &act, NULL);
     
-    //F IFO
+    //FIFO
     for (int time = 0, i = N; i > 0; time++) {
         change_priority();
         
