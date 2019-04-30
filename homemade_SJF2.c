@@ -16,7 +16,7 @@
 #include "functions.h"
 #define ever ;;
 
-static int last,numberOfTime, run, countFinishing;
+static int numberOfTime, run, countFinishing;
 int numberOfProcess;
 int running = 0;
 
@@ -129,10 +129,9 @@ int main(int argc, char* argv[])
 		if (next != -1) {
 			if (run != next) {
 				proc_wakeup(proc[next].pid);
-				proc_block(proc[run].pid);
+				//proc_block(proc[run].pid);
 				run = next;
                 running = 1;
-				last = numberOfTime;
 			}
 		}
     
