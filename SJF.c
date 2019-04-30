@@ -27,27 +27,26 @@ void priority_down(pid_t pid){
 	}
 	set_priority(pid, SCHED_FIFO, LOW_PRIORITY);
 }
-void nextproc(pid_t pid){
+void nextprocess(pid_t pid){
 	set_priority(pid, SCHED_FIFO, HIGH_PRIORITY);
 	running = 1;
 }
 void priority_ch(pid_t pid){
 	if(running == 0){
-		nextproc(pid);
+		nextprocess(pid);
 	}
-	if(running){
+	if(running != 0){
 		priority_up(pid);
 	}
 }
 
-
 /*=========================================================*/
 int main(){
 	scanf("%d",&N);
-	fprintf(stderr, "scanned\n");
+
 	process* proc;
 	proc = take_tasks(N);
-	fprintf(stderr, "task taken\n");
+
 	qsort(proc, N,sizeof(int), cmp_t_exec );
 	qsort(proc, N,sizeof(int), cmp_t_ready );
 	fprintf(stderr, "sorted\n");
@@ -67,8 +66,9 @@ int main(){
 			priority_down(proc[nextproc].pid);
 			create_proc(&proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
 			nextproc ++;
+			fprintf(stderr, "Nextproc_A : %d\n", nextproc);
 			priority_ch(proc[nextproc].pid);
-			fprintf(stderr, "Nextproc : %d\n", nextproc);
+			fprintf(stderr, "Nextproc_B : %d\n", nextproc);
 		}
 		run_unit_time();
 	}
