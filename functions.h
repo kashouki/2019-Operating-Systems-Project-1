@@ -1,7 +1,7 @@
 #define TIME_UNIT 1000000UL
 #define LOW_PRIORITY 25
 #define INIT_PRIORITY 50
-#define HIGH_RPIORITY 75
+#define HIGH_PRIORITY 75
 
 typedef struct process {
     pid_t pid;

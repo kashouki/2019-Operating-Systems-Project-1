@@ -54,6 +54,7 @@ void create_proc(pid_t* pid, char name[], int idx, int t_exec) {
         exit(1);
     }
     if(*pid == 0) {//child
+        fprintf(stderr, "child created\n");
         char IDX[32];
         char T_EXEC[32];
         sprintf(IDX, "%d", idx);
@@ -61,6 +62,7 @@ void create_proc(pid_t* pid, char name[], int idx, int t_exec) {
         execl("./process", "./process", name, IDX, T_EXEC);
     }
     if(*pid > 0) {//parent
+        fprintf(stderr, "this is parent\n");
         assign_cpu(*pid, 1);
         set_priority(*pid, SCHED_FIFO, LOW_PRIORITY);
     }
@@ -68,10 +70,14 @@ void create_proc(pid_t* pid, char name[], int idx, int t_exec) {
 
 //take input tasks. usage: (process*) proc = take_tasks(N); N = number of tasks
 process* take_tasks(int N) {
+    //fprintf(stderr, "in take_tasks\n");
     process *proc = (process *)malloc(N * sizeof(process));
+    //fprintf(stderr, "taking tasks...\n");
     for(int i = 0; i < N; i++) {
         scanf("%s%d%d", proc[i].name, &proc[i].t_ready, &proc[i].t_exec);
     }
+    //fprintf(stderr, "tasks taken!\nsorting...\n");
     qsort(proc, N, sizeof(process), cmp_t_ready);
+    //fprintf(stderr, "tasks sorted!\n");
     return proc;
 }
