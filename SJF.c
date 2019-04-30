@@ -67,7 +67,7 @@ int main(){
 			create_proc(&proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
 			nextproc ++;
 			priority_ch(proc[nextproc].pid);
-			fprintf(stderr, "num_done\n");
+			fprintf(stderr, "%d\n", num_done);
 		}
 		run_unit_time();
 	}
