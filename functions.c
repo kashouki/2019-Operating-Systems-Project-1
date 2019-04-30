@@ -53,14 +53,14 @@ void create_proc(pid_t* pid, char name[], int idx, int t_exec) {
         fprintf(stderr, "fork error.\n");
         exit(1);
     }
-    else if(*pid == 0) {//child
+    if(*pid == 0) {//child
         char IDX[32];
         char T_EXEC[32];
         sprintf(IDX, "%d", idx);
         sprintf(T_EXEC, "%d", t_exec);
         execl("./process", "./process", name, IDX, T_EXEC);
     }
-    else if(*pid > 0) {//parent
+    if(*pid > 0) {//parent
         assign_cpu(*pid, 1);
         set_priority(*pid, SCHED_FIFO, LOW_PRIORITY);
     }
