@@ -59,10 +59,10 @@ int main(void) {
     sigaction(SIGCHLD, &act, NULL);
     
     
-    for (int j=0; j<N; j++) {
-        if (proc[j].t_ready <= time ) {
-            insert(diu, j, proc);
-            proc[j].t_ready = 999999;
+    for (int i=0; i<N; i++) {
+        if (proc[i].t_ready <= time ) {
+            insert(diu, i, proc);
+            proc[i].t_ready = 999999;
         }
     }
     nextproc = heap_min(diu);
@@ -70,17 +70,17 @@ int main(void) {
     
     //F IFOdasdasda
     int time = 0;
-    for (time = 0, i = N; i > 0; time++) {
+    for (;;) {
         change_priority();
         
         while (nextproc < N && time == (proc[nextproc].t_ready + proc[nextproc].t_exec)) {
             priority_down();
             create_proc(&proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
             
-            for (int j=1; j<N; j++) {
-                if (proc[j].t_ready <= time ) {
-                    insert(diu, j, proc);
-                    proc[j].t_ready = 999999;
+            for (int i=1; i<N; i++) {
+                if (proc[i].t_ready <= time ) {
+                    insert(diu, i, proc);
+                    proc[i].t_ready = 999999;
                 }
             }
             nextproc = heap_min(diu);
@@ -90,7 +90,7 @@ int main(void) {
         }
         
         
-
+        time ++;
         run_unit_time();
     }
     exit(0);
