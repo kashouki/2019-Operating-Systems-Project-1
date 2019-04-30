@@ -82,5 +82,63 @@ process* take_tasks(int N) {
     return proc;
 }
 
+void swap(int *x, int *y) {
+    int tmp = *x;
+    *x = *y;
+    *y = tmp;
+}
+
+int parent(int x){ return x/2; }
+int left(int x){ return 2*x; }
+int right(int x){ return (2*x + 1); }
+
+void bub_up(process* proc){
+    int cur = size;
+    int par = parent(cur);
+    while(cur != 0 && proc[proc_idx[cur]]->t_exec < proc[proc_idx[par]]->t_exec  ){
+        swap(&proc_idx[cur],&proc_idx[par]);
+        cur = par;
+        par = par(cur);
+    }
+}
+void bub_down(process* proc){
+    for(int cur=1; cur<=size;){
+        int l = left(cur);
+        int r = right(cur);
+        int min = (proc[proc_idx[r]]->t_exec < proc[proc_idx[l]]->t_exec)? r:l;
+        if( proc[proc_idx[cur]]->t_exec > proc[proc_idx[min]]->t_exec ){
+            swap(&proc_idx[cur],&proc_idx[l]);
+            cur = min;
+        }
+        else{
+            break;
+        }
+    }
+}
+
+void remove_min(process* proc){
+    proc_idx[1] = proc_idx[size];
+    size--;
+    bub_down(proc);
+}
+
+void insert(int x, process* proc){
+    size++;
+    proc_idx[size] = x;
+    bub_up(proc);
+}
+
+
+heap* create_heap() {
+    heap *new = (heap *)malloc(heap);
+    new->size = 0;
+    return new;
+}
+
+int heap_min(heap *hp) {
+    return hp->proc_idx[1];
+}
+
+
 
 

@@ -12,9 +12,9 @@ typedef struct process {
 }process;
 
 typedef struct heap {
+    int proc_idx[1000001];
     int size;
-    process* node;
-}heap;
+}
 
 //run unit of time. usage: run_unit_time();
 void run_unit_time();
