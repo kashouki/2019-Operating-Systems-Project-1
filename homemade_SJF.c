@@ -23,7 +23,12 @@ void sig_child(int signum)
     running = 0;
     if (finished == N) exit(0);
 }
-
+void priority_down(){
+    if(running == 0){
+        return ;
+    }
+    set_priority(proc[nextproc].pid, SCHED_FIFO, LOW_PRIORITY);
+}
 void change_priority() {
     if (running == 0){
         set_priority(proc[nextproc].pid, SCHED_FIFO, HIGH_PRIORITY);
@@ -64,11 +69,12 @@ int main(void) {
     remove_min(diu, proc);
     
     //F IFOdasdasda
-    for (int time = 0, i = N; i > 0; time++) {
+    int time = 0;
+    for (time = 0, i = N; i > 0; time++) {
         change_priority();
         
         while (nextproc < N && time == (proc[nextproc].t_ready + proc[nextproc].t_exec)) {
-            
+            priority_down();
             create_proc(&proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
             
             for (int j=1; j<N; j++) {
