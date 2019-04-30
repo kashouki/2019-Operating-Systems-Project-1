@@ -1,4 +1,7 @@
 #define TIME_UNIT 1000000UL
+#define LOW_PRIORITY 25
+#define INIT_PRIORITY 50
+#define HIGH_RPIORITY 75
 
 typedef struct process {
     pid_t pid;
@@ -15,6 +18,12 @@ int cmp_t_ready(const void *a, const void *b);
 
 //cmp for sorting by t_exec
 int cmp_t_exec(const void *a, const void *b);
+
+//assign CPU to process
+void assign_cpu(pid_t pid, int cpu);
+
+//set process priority
+void set_priority(pid_t pid, int policy, int priority)
 
 //create a process for a task.
 void create_proc(pid_t* pid, char name[], int idx, int t_exec);

@@ -21,6 +21,9 @@ int N; //number of processes
 
 int main(int argc, char *argv[]) {
     
+    assign_cpu(getpid(), 0);
+    
+    
     //take scheduling type and execute scheduling program
     scanf("%s", S);
     if(strcmp(S, "FIFO") == 0) {

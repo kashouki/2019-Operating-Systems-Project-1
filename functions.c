@@ -31,6 +31,21 @@ int cmp_t_exec(const void *a, const void *b) {
     return ((process *)a)->t_exec - ((process *)b)->t_exec;
 }
 
+//assign CPU to process
+void assign_cpu(pid_t pid, int cpu) {
+    cpu_set_t mask;
+    CPU_ZERO(&mask);
+    CPU_SET(cpu, &mask);
+    sched_setaffinity(pid, sizeof(mask), &mask);
+}
+
+//set process priority. USE int policy AS THE FUNCTION ITSELF DEFINES, SEE MANUAL; int priority DEFINED IN functions.h
+void set_priority(pid_t pid, int policy, int priority) {
+    strcut sched_param param;
+    param.sched_priority = priority;
+    sched_setscheduler(pid, policy, &param);
+}
+
 //create a process for a task.
 void create_proc(pid_t* pid, char name[], int idx, int t_exec) {
     if((*pid = fork()) < 0) {
@@ -45,7 +60,7 @@ void create_proc(pid_t* pid, char name[], int idx, int t_exec) {
         execl("./process", "./process", name, IDX, T_EXEC);
     }
     else if(*pid > 0) {//parent
-        
+        assign_cpu(*pid, 1)
     }
 }
 
@@ -58,5 +73,3 @@ process* take_tasks(int N) {
     qsort(proc, N, sizeof(process), cmp_t_ready);
     return proc;
 }
-
-
