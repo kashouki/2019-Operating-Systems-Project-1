@@ -46,18 +46,20 @@ int main(){
 	fprintf(stderr, "scanned");
 	process* proc;
 	proc = take_tasks(N);
-	fprintf(stderr, "task taken");
+	fprintf(stderr, "task taken\n");
 	qsort(proc, N,sizeof(int), cmp_t_exec );
 	qsort(proc, N,sizeof(int), cmp_t_ready );
-	fprintf(stderr, "sorted");
+	fprintf(stderr, "sorted\n");
+
 	struct sigaction sig;
 	sig.sa_flags = 0;
 	sig.sa_handler = sig_child;
 	sigfillset(&sig.sa_mask);
 	sigaction(SIGCHLD, &sig, NULL);
-	fprintf(stderr, "signal");
+	fprintf(stderr, "signal\n");
+
 	int nextproc = 0;
-	fprintf(stderr, "startinggggggggggg");
+	fprintf(stderr, "startinggggggggggg\n");
 	for (int time = 0, i = N; i > 0; time++){
 		priority_ch(proc[nextproc].pid);
 		while(nextproc < N && time == proc[nextproc].t_ready){
@@ -65,6 +67,7 @@ int main(){
 			create_proc(&proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
 			nextproc ++;
 			priority_ch(proc[nextproc].pid);
+			fprintf(stderr, "num_done\n");
 		}
 		run_unit_time();
 	}
