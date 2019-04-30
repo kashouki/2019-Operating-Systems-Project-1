@@ -92,22 +92,22 @@ int parent(int x){ return x/2; }
 int left(int x){ return 2*x; }
 int right(int x){ return (2*x + 1); }
 
-void bub_up(process* proc){
-    int cur = size;
+void bub_up(heap* hp, process* proc){
+    int cur = hp->size;
     int par = parent(cur);
-    while(cur != 0 && proc[proc_idx[cur]]->t_exec < proc[proc_idx[par]]->t_exec  ){
-        swap(&proc_idx[cur],&proc_idx[par]);
+    while(cur != 0 && proc[hp->proc_idx[cur]].t_exec < proc[hp->proc_idx[par]].t_exec  ){
+        swap(&hp->proc_idx[cur],&hp->proc_idx[par]);
         cur = par;
-        par = par(cur);
+        par = parent(cur);
     }
 }
-void bub_down(process* proc){
-    for(int cur=1; cur<=size;){
+void bub_down(heap* hp, process* proc){
+    for(int cur=1; cur<=hp->size;){
         int l = left(cur);
         int r = right(cur);
-        int min = (proc[proc_idx[r]]->t_exec < proc[proc_idx[l]]->t_exec)? r:l;
-        if( proc[proc_idx[cur]]->t_exec > proc[proc_idx[min]]->t_exec ){
-            swap(&proc_idx[cur],&proc_idx[l]);
+        int min = (proc[hp->proc_idx[r]].t_exec < proc[hp->proc_idx[l]].t_exec)? r:l;
+        if( proc[hp->proc_idx[cur]].t_exec > proc[hp->proc_idx[min]].t_exec ){
+            swap(&hp->proc_idx[cur],&hp->proc_idx[l]);
             cur = min;
         }
         else{
@@ -116,21 +116,21 @@ void bub_down(process* proc){
     }
 }
 
-void remove_min(process* proc){
-    proc_idx[1] = proc_idx[size];
-    size--;
-    bub_down(proc);
+void remove_min(heap* hp, process* proc){
+    hp->proc_idx[1] = hp->proc_idx[hp->size];
+    hp->size--;
+    bub_down(hp,proc);
 }
 
-void insert(int x, process* proc){
-    size++;
-    proc_idx[size] = x;
-    bub_up(proc);
+void insert(heap* hp, int x, process* proc){
+    hp->size++;
+    hp->proc_idx[hp->size] = x;
+    bub_up(hp,proc);
 }
 
 
 heap* create_heap() {
-    heap *new = (heap *)malloc(heap);
+    heap *new = (heap *)malloc(sizeof(heap));
     new->size = 0;
     return new;
 }

@@ -45,13 +45,13 @@ int left(int x);
 
 int right(int x);
 
-void bub_up(process* proc);
+void bub_up(heap* hp, process* proc);
 
-void bub_down(process* proc);
+void bub_down(heap* hp, process* proc);
 
-void remove_min(process* proc);
+void remove_min(heap* hp, process* proc);
 
-void insert(int x, process* proc);
+void insert(heap* hp, int x, process* proc);
 
 heap* create_heap();
 
