@@ -4,8 +4,9 @@
 #include "functions.h"
 #include <stdlib.h>
 #include <sched.h>
-int running;
-int N;
+int running = 0; int nextproc = 0; int N;
+
+process* proc;
 
 void sig_child(int signum){
 	static int num_done = 0;
@@ -18,25 +19,20 @@ void sig_child(int signum){
 	}
 }
 
-void priority_up(pid_t pid){
-	set_priority(pid, SCHED_FIFO, INIT_PRIORITY);
-}
-void priority_down(pid_t pid){
+void priority_down(){
 	if(running == 0){
 		return;
 	}
-	set_priority(pid, SCHED_FIFO, LOW_PRIORITY);
+	set_priority(proc[nextproc].pid, SCHED_FIFO, LOW_PRIORITY);
 }
-void nextprocess(pid_t pid){
-	set_priority(pid, SCHED_FIFO, HIGH_PRIORITY);
-	running = 1;
-}
-void priority_ch(pid_t pid){
+
+void priority_ch(){
 	if(running == 0){
-		nextprocess(pid);
+		set_priority(proc[nextproc].pid, SCHED_FIFO, HIGH_PRIORITY);/*next*/
+		running = 1;
 	}
 	if(running != 0){
-		priority_up(pid);
+		set_priority(proc[nextproc+1].pid, SCHED_FIFO, INIT_PRIORITY);/*prior_up*/
 	}
 }
 
@@ -44,7 +40,6 @@ void priority_ch(pid_t pid){
 int main(){
 	scanf("%d",&N);
 
-	process* proc;
 	proc = take_tasks(N);
 
 	qsort(proc, N,sizeof(int), cmp_t_exec );
@@ -58,16 +53,15 @@ int main(){
 	sigaction(SIGCHLD, &sig, NULL);
 	fprintf(stderr, "signal\n");
 
-	int nextproc = 0;
 	fprintf(stderr, "startinggggggggggg\n");
 	for (int time = 0, i = N; i > 0; time++){
-		priority_ch(proc[nextproc].pid);
+		priority_ch();
 		while(nextproc < N && time == proc[nextproc].t_ready){
-			priority_down(proc[nextproc].pid);
+			priority_down();
 			create_proc(&proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
 			nextproc ++;
 			fprintf(stderr, "Nextproc_A : %d\n", nextproc);
-			priority_ch(proc[nextproc].pid);
+			priority_ch();
 			fprintf(stderr, "Nextproc_B : %d\n", nextproc);
 		}
 		run_unit_time();
