@@ -41,8 +41,8 @@ void priority_ch(){
     /*
 	if(running != 0){
 		set_priority(proc[nextproc+1].pid, SCHED_FIFO, INIT_PRIORITY);
-    */
 	}
+     */
 }
 
 /*=========================================================*/
