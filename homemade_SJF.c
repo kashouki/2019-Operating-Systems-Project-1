@@ -7,6 +7,7 @@
 
 int N, nextproc = 0, workingon = 0, running = 0;
 process* proc;
+heap* diu;
 
 int cmp_sum(const void *a, const void *b) {
     return (((process *)a)->t_ready - ((process *)b)->t_ready) +
@@ -48,7 +49,7 @@ int main(void) {
     scanf("%d", &N);
     proc = take_tasks(N);
     
-    heap* diu = create_heap();
+    diu = create_heap();
     
     for (i = 0; i < N; i++){
         proc[i].pid = -1;
