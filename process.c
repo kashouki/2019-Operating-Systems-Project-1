@@ -16,6 +16,7 @@
 #include <sched.h>
 #include "functions.h"
 #define ever    ;;
+#define BASE 100000
 
 //usage: execl("./process, "./process", name, index, t_exec);
 int main(int argc, char *argv[]) {
@@ -41,8 +42,9 @@ int main(int argc, char *argv[]) {
     char dmesg_buff[512];
     sprintf(dmesg_buff, "[project1] %d %lu.%09lu %lu.%09lu\n", pid, t_start.tv_sec, t_start.tv_nsec, t_finish.tv_sec, t_finish.tv_nsec);
     syscall(315, dmesg_buff);
-    syscall(351, dmesg_buff);
-    fprintf(stderr, "%s", dmesg_buff);
+    fprintf(stderr, "[Project1] %d %ld.%09ld %ld.%09ld\n", pid, tiempo_empezar / BASE, tiempo_empezar % BASE, tiempo_terminar / BASE, tiempo_terminar % BASE);
+    //fprintf(stderr, "%s", dmesg_buff);
+    
     
     exit(0);
 }
