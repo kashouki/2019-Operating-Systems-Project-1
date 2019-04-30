@@ -34,7 +34,7 @@ void priority_ch(pid_t pid){
 	if(running == 0){
 		nextproc(pid);
 	}
-	if(running == 0){
+	if(running){
 		priority_up(pid);
 	}
 }
@@ -43,21 +43,21 @@ void priority_ch(pid_t pid){
 /*=========================================================*/
 int main(){
 	scanf("%d",&N);
-
+	fprintf(stderr, "scanned");
 	process* proc;
 	proc = take_tasks(N);
-	printf("task taken");
+	fprintf(stderr, "task taken");
 	qsort(proc, N,sizeof(int), cmp_t_exec );
 	qsort(proc, N,sizeof(int), cmp_t_ready );
-	printf("sorted");
+	fprintf(stderr, "sorted");
 	struct sigaction sig;
 	sig.sa_flags = 0;
 	sig.sa_handler = sig_child;
 	sigfillset(&sig.sa_mask);
 	sigaction(SIGCHLD, &sig, NULL);
-	printf("signal");
+	fprintf(stderr, "signal");
 	int nextproc = 0;
-	printf("startinggggggggggg");
+	fprintf(stderr, "startinggggggggggg");
 	for (int time = 0, i = N; i > 0; time++){
 		priority_ch(proc[nextproc].pid);
 		while(nextproc < N && time == proc[nextproc].t_ready){
