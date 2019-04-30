@@ -4,6 +4,7 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include "functions.h"
+#define ever ;;
 
 
 int N, nextproc = 0, workingon = 0, running = 0;
@@ -48,7 +49,8 @@ int main(void) {
     sigaction(SIGCHLD, &act, NULL);
     
     //FIFO
-    for (int time = 0, i = N; i > 0; time++) {
+    int time = 0;
+    for(ever) {
         change_priority();
         
         while (nextproc < N && time == proc[nextproc].t_ready) {
@@ -61,6 +63,7 @@ int main(void) {
         
 
         run_unit_time();
+        time++;
     }
     exit(0);
 }
