@@ -24,7 +24,7 @@ void change_priority() {
         running = 1;
     }
     if (running != 0){
-        SET_PRIORITY(proc[nextproc+1].pid, SCHED_FIFO, INIT_PRIORITY);
+        set_priority(proc[nextproc+1].pid, SCHED_FIFO, INIT_PRIORITY);
     }
 }
 
