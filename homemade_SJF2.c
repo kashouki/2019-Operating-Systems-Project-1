@@ -118,10 +118,6 @@ int main(int argc, char* argv[])
 				run = next;
                 running = 1;
                 proc[run].t_exec = 0;
-                if(proc[run].pid != -1) {
-                    waitpid(proc[run].pid, NULL, 0);
-                    proc[run].pid = -1;
-                }
 			}
 		}
     
