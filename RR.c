@@ -7,6 +7,7 @@
 
 #define QUEUE_MAX_SIZE 1000007
 #define TIME_QUANTUM 500
+#define ever ;;
 
 int run;
 int queue[QUEUE_MAX_SIZE];
@@ -79,8 +80,9 @@ int main(int argc, char *argv[]) {
     sigaction(SIGCHLD, &sig, NULL);
 
     int nextproc = 0;
-
-    for(int t=0, i=N; i>0; t++) {
+    
+    int t = 0;
+    for(ever) {
         priority_ch();
         while( nextproc < N && t == proc[nextproc].t_ready ){
             create_proc( &proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
@@ -101,6 +103,7 @@ int main(int argc, char *argv[]) {
             run = 0;
             priority_ch();
         }
+        t++;
     }
     exit(0);
 }
