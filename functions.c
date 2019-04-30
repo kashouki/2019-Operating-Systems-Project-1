@@ -54,7 +54,7 @@ void create_proc(pid_t* pid, char name[], int idx, int t_exec) {
         exit(1);
     }
     if(*pid == 0) {//child
-        fprintf(stderr, "child created\n");
+        //fprintf(stderr, "child created\n");
         char IDX[32];
         char T_EXEC[32];
         sprintf(IDX, "%d", idx);
@@ -62,7 +62,7 @@ void create_proc(pid_t* pid, char name[], int idx, int t_exec) {
         execl("./process", "./process", name, IDX, T_EXEC);
     }
     if(*pid > 0) {//parent
-        fprintf(stderr, "this is parent\n");
+        //fprintf(stderr, "this is parent\n");
         assign_cpu(*pid, 1);
         set_priority(*pid, SCHED_FIFO, LOW_PRIORITY);
     }
