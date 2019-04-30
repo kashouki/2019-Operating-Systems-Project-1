@@ -58,7 +58,7 @@ int main(void) {
     sigfillset(&act.sa_mask);
     sigaction(SIGCHLD, &act, NULL);
     
-    
+    int time = 0;
     for (i=0; i<N; i++) {
         if (proc[i].t_ready <= time ) {
             insert(diu, i, proc);
@@ -69,7 +69,7 @@ int main(void) {
     remove_min(diu, proc);
     
     //F IFOdasdasda
-    int time = 0;
+    time = 0;
     for (;;) {
         change_priority();
         
