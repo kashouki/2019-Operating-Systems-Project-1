@@ -17,13 +17,14 @@
 #define ever ;;
 
 static int last,numberOfTime, run, countFinishing;
+int numberOfProcess;
 
 void sig_child(int signum)
 {
     static int finished = 0;
     wait(NULL);
-    ++finished;
-    if (finished == N) exit(0);
+    finished++;
+    if (finished == numberOfProcess) exit(0);
 }
 
 int proc_wakeup(int pid)
@@ -64,8 +65,7 @@ int nextP(struct process *proc, int numberOfProcess, int policy)
 
 int main(int argc, char* argv[])
 {
-	int policy,numberOfProcess;
-	char sched_policy[256];
+
 	struct process *proc;
 
 	scanf("%d", &numberOfProcess);
