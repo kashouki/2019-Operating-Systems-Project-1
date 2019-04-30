@@ -52,7 +52,7 @@ int proc_block(int pid)
 }
 
 
-int nextP(struct process *proc, int numberOfProcess, int policy)
+int nextP(struct process *proc, int numberOfProcess)
 {
 	int ret = -1;
     if(running == 1) {
@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
 
 		}
     
-		int next = nextP(proc, numberOfProcess, policy);
+		int next = nextP(proc, numberOfProcess);
 		if (next != -1) {
 			if (run != next) {
 				proc_wakeup(proc[next].pid);
