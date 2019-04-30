@@ -8,10 +8,11 @@
 #define TIME_QUANTUM 500
 
 int run;
-process queue[QUEUE_MAX_SIZE]; 
+int queue[QUEUE_MAX_SIZE]; 
 int front=0, back=0;
 int time_counting=0, block;
 int N;
+process* proc;
 
 void push_queue( int x ){
     back++;
@@ -36,14 +37,14 @@ void sig_child( int signum ){
     num_fin++;
     pop_queue();
     run = 0;
-    flag = 0;
+    block = 0;
     time_counting = 0;
     if( num_fin==N ) exit(0);
 }
 
 void incr_nextproc_priority(){
     int next = queue[front+1];
-    set_priority( proc[next].pid, SCED_FIFO, INIT_PRIORITY );
+    set_priority( proc[next].pid, SCHED_FIFO, INIT_PRIORITY );
 }
 
 void run_nextproc(){
@@ -51,7 +52,7 @@ void run_nextproc(){
     int next = queue[front];
     if( proc[next].t_exec <= TIME_QUANTUM )
       block = 1;
-    set_priority( proc[next].pid, SCED_FIFO, HIGH_PRIORITY );
+    set_priority( proc[next].pid, SCHED_FIFO, HIGH_PRIORITY );
     run = 1;
 }
 
@@ -65,21 +66,20 @@ void priority_ch(){
 int main(int argc, char *argv[]) {
     scanf("%d",&N);
 
-    process* proc;
     proc = take_tasks(N);
     
     struct sigaction sig;
     sig.sa_flags = 0;
-    sig.sa_handler = sigchild;
+    sig.sa_handler = sig_child;
     sigfillset(&sig.sa_mask);
-    sigaction(SIGCHILD, &sig, NULL);
+    sigaction(SIGCHLD, &sig, NULL);
 
     int nextproc = 0;
 
     for(int t=0, i=N; i>0; t++) {
         priority_ch();
         while( nextproc < N && t == proc[nextproc].t_ready ){
-            creat_proc( &proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
+            create_proc( &proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
             push_queue( nextproc );
             nextproc++;
             priority_ch();
@@ -91,8 +91,8 @@ int main(int argc, char *argv[]) {
         if( !block && run && time_counting==TIME_QUANTUM ){
             int cur = front_queue();
             pop_queue();
-            proc[cur] -= TIME_QUANTUM;
-            set_priority( proc[cur].pid, SCED_FIFO, LOW_PRIORITY );
+            proc[cur].t_exec -= TIME_QUANTUM;
+            set_priority( proc[cur].pid, SCHED_FIFO, LOW_PRIORITY );
             push_queue( cur );
             run = 0;
             priority_ch();
