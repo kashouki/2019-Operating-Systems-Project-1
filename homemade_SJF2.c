@@ -62,11 +62,11 @@ int nextP(struct process *proc, int numberOfProcess, int numberOfTime)
     
 	for (int i = 0; i < numberOfProcess; i++) {
         if(proc[i].t_ready > numberOfTime) {
-            printf("return here\n");
+            //printf("return here\n");
             break;
         }
         if(i == 0 && proc[i].t_exec != 0) {
-            printf("return aqui\n");
+            //printf("return aqui\n");
             return i;
         }
         ret = 0;
@@ -74,8 +74,8 @@ int nextP(struct process *proc, int numberOfProcess, int numberOfTime)
             ret = i;
         }
 	}
-    printf("return ici\n");
-    fprintf(stderr, "nextP %d!\n", ret);
+    //printf("return ici\n");
+    //fprintf(stderr, "nextP %d!\n", ret);
 	return ret;
 }
 
@@ -112,7 +112,7 @@ int main(int argc, char* argv[])
 		int next = nextP(proc, numberOfProcess, numberOfTime);
 		if (next != -1) {
 			if (run != next) {
-                fprintf(stderr, "I choose you %s!\n", proc[next].name);
+                //fprintf(stderr, "I choose you %s!\n", proc[next].name);
 				proc_wakeup(proc[next].pid);
 				//proc_block(proc[run].pid);
 				run = next;
