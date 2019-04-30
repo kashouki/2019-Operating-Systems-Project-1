@@ -35,7 +35,9 @@ void change_priority() {
         running = 1;
     }
     if (running != 0){
-        set_priority(proc[nextproc+1].pid, SCHED_FIFO, INIT_PRIORITY);//next?
+        int next_one = heap_min(diu)
+        if (next_one != -1)
+            set_priority(proc[next_one].pid, SCHED_FIFO, INIT_PRIORITY);//next?
     }
 }
 
@@ -77,14 +79,14 @@ int main(void) {
     nextproc = heap_min(diu);
     remove_min(diu, proc);
     
+    start += proc[nextproc].t_exec;
+    
     //F IFOdasdasda
     while (1) {
         change_priority();
         
-        while (nextproc < N && time == (start + proc[nextproc].t_exec)) {
+        while (nextproc < N && time == (start)) {
             priority_down();
-            create_proc(&proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
-            start += proc[nextproc].t_exec;
 
             for (int i=0; i<N; i++) {
                 if (proc[i].t_ready <= time ) {
@@ -92,9 +94,16 @@ int main(void) {
                     proc[nextproc].t_ready = 9999999;
                 }
             }
+            
             nextproc = heap_min(diu);
-            if (nextproc == -1) break;
+            if (nextproc == -1) {
+                t++; start++;
+                break;
+            }
             remove_min(diu, proc);
+            
+            create_proc(&proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
+            start += proc[nextproc].t_exec;
             
             change_priority();
         }
