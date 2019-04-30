@@ -64,6 +64,7 @@ int main(void) {
             for (int j=0; j<N; j++) {
                 if (proc[j].t_ready <= time ) {
                     insert(diu, j, proc);
+                    proc[j].t_ready = 999999;
                 }
             }
             nextproc = heap_min(diu);
