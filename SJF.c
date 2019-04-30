@@ -5,7 +5,7 @@
 #include <stdlib.h>
 int running;
 
-void child(){
+void sig_child(int signum){
 	static int num_done = 0;
 	wait(NULL);
 	num_done++;
@@ -14,27 +14,26 @@ void child(){
 		exit(0);
 	}
 }
-void priority_up(){
-	set_priority(proc[0].pid, SCHED_FIFO, INIT_PRIORITY);
+
+void priority_up(pid_t pid){
+	set_priority(pid, SCHED_FIFO, INIT_PRIORITY);
 }
-void priority_down(){
+void priority_down(pid_t pid){
 	if(running == 0){
 		return;
 	}
-	set_priority(proc[0].pid, SCHED_FIFO, LOW_PRIORITY);
+	set_priority(pid, SCHED_FIFO, LOW_PRIORITY);
 }
-void nextproc(){
-	proc[0].t_exec = 10000000000;
-	proc[0].t_ready = 10000000000;
-	set_priority(proc[0].pid, SCHED_FIFO, HIGH_PRIORITY);
+void nextproc(pid_t pid){
+	set_priority(pid, SCHED_FIFO, HIGH_PRIORITY);
 	running = 1;
 }
-void priority_set(){
+void priority_ch(pid_t pid){
 	if(running == 0){
-		nextproc();
+		nextproc(pid);
 	}
 	if(running == 0){
-		priority_up();
+		priority_up(pid);
 	}
 }
 
@@ -50,17 +49,21 @@ int main(){
 	qsort(proc.t_exec, ordernum,sizeof(int), cmp_t_exec );
 	qsort(proc.t_ready, ordernum,sizeof(int), cmp_t_ready );
 
-	child();
+	struct sigaction sig;
+	sig.sa_flags = 0;
+	sig.sa_handler = child;
+	sigfillset(&sig.sa_mask);
+	sigaction(SIGCHLD, &sig, NULL);
 
 	int nextproc = 0;
 
-	for (int time = 0, int i = N; i > 0; t++){
-		priority_set();
+	for (int time = 0, i = N; i > 0; time++){
+		priority_ch(proc[nextproc]);
 		while(nextproc < N && time == proc[nextproc].t_ready){
-			priority_down();
+			priority_down(proc[nextproc].pid);
 			create_proc(proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
 			nextproc ++;
-			priority_set();
+			priority_ch(proc[nextproc].pid);
 		}
 		run_unit_time();
 	}
