@@ -1,81 +1,128 @@
-#include <stdio.h>
-#include <signal.h>
-#include <sys/wait.h>
-#include "functions.h"
+#define _GNU_SOURCE
 #include <stdlib.h>
+#include <signal.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
 #include <sched.h>
+#include <time.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/syscall.h>
+#define GET_TIME 314
+#define PRINTK 315
+#define CHILD_CPU 1
+#define PARENT_CPU 0
+#include "functions.h"
 #define ever ;;
-int running = 0; int nextproc = 0; int N;
 
-process* proc;
-heap* hp;
-int choose;
+static int numberOfTime, run, countFinishing;
+int numberOfProcess;
+int running = 0;
 
-void sig_child(int signum){
-	static int num_done = 0;
-	wait(NULL);
-	num_done++;
-	running = 0;
-	/*fprintf(stderr, "num_done : %d\n", num_done);*/
-	if(num_done == N){
-		exit(0);
-	}
+void sig_child(int signum)
+{
+    static int finished = 0;
+    wait(NULL);
+    finished++;
+    running = 0;
+    run = -1;
+    if (finished == numberOfProcess) exit(0);
 }
 
-void priority_down(){
-	/*
-     if(running == 0){
-		return ;
-	}
-     */
-	set_priority(proc[nextproc].pid, SCHED_FIFO, LOW_PRIORITY);
+int proc_wakeup(int pid)
+{
+    struct sched_param param;
+    param.sched_priority = 0;
+    int ret = sched_setscheduler(pid, SCHED_OTHER, &param);
+    if (ret < 0) {
+        //perror("sched_setscheduler");
+        return -1;
+    }
+    return ret;
 }
 
-void priority_ch(){
-	if(running == 0){
-        choose = heap_min(hp);
-		set_priority(proc[choose].pid, SCHED_FIFO, HIGH_PRIORITY);/*next*/
-		running = 1;
-        remove_min(hp, proc);
-	}
-    /*
-	if(running != 0){
-		set_priority(proc[nextproc+1].pid, SCHED_FIFO, INIT_PRIORITY);
-	}
-     */
+int proc_block(int pid)
+{
+    struct sched_param param;
+    param.sched_priority = 0;
+    int ret = sched_setscheduler(pid, SCHED_IDLE, &param);
+    if (ret < 0)
+        return -1;
+    return ret;
 }
 
-/*=========================================================*/
-int main(){
-	scanf("%d",&N);
-	proc = take_tasks(N);
 
-	/*fprintf(stderr, "sorted\n");*/
-
-	struct sigaction sig;
-	sig.sa_flags = 0;
-	sig.sa_handler = sig_child;
-	sigfillset(&sig.sa_mask);
-	sigaction(SIGCHLD, &sig, NULL);
-	/*fprintf(stderr, "signal\n");*/
-
-    hp = create_heap();
+int nextP(struct process *proc, int numberOfProcess, int numberOfTime)
+{
+    int ret = -1;
+    if(running == 1) {
+        return ret;
+    }
     
-	/*fprintf(stderr, "startinggggggggggg\n");*/
-    int time = 0;
-    choose = 0;
-	for(ever){
-		/*priority_ch();*/
-		while(nextproc < N && time == proc[nextproc].t_ready){
-            insert(hp, nextproc, proc);
-			create_proc(&proc[nextproc].pid, proc[nextproc].name, nextproc, proc[nextproc].t_exec);
-            priority_down();
-			nextproc ++;
-			/*fprintf(stderr, "Nextproc_A : %d\n", nextproc);*/
-			/*fprintf(stderr, "Nextproc_B : %d\n", nextproc);*/
-		}
-        priority_ch();
-		run_unit_time();
-        time++;
-	}
+    for (int i = 0; i < numberOfProcess; i++) {
+        if(proc[i].t_ready > numberOfTime) {
+            //printf("return here\n");
+            break;
+        }
+        if(i == 0 && proc[i].t_exec != 0) {
+            //printf("return aqui\n");
+            return i;
+        }
+        ret = 0;
+        if(proc[i].t_exec < proc[ret].t_exec) {
+            ret = i;
+        }
+    }
+    //printf("return ici\n");
+    //fprintf(stderr, "nextP %d!\n", ret);
+    return ret;
+}
+
+
+int main(int argc, char* argv[])
+{
+    
+    struct process *proc;
+    
+    scanf("%d", &numberOfProcess);
+    
+    proc = take_tasks(numberOfProcess);
+    
+    struct sigaction act;
+    act.sa_flags = 0;
+    act.sa_handler = sig_child;
+    sigfillset(&act.sa_mask);
+    sigaction(SIGCHLD, &act, NULL);
+    
+    proc_wakeup(getpid());
+    numberOfTime = 0;
+    run = -1;
+    countFinishing = 0;
+    
+    for(ever) {
+        for (int i = 0; i < numberOfProcess; i++) {
+            if (proc[i].t_ready == numberOfTime) {
+                create_proc(&proc[i].pid, proc[i].name, i, proc[i].t_exec);
+                proc_block(proc[i].pid);
+            }
+            
+        }
+        
+        int next = nextP(proc, numberOfProcess, numberOfTime);
+        if (next != -1) {
+            if (run != next) {
+                //fprintf(stderr, "I choose you %s!\n", proc[next].name);
+                proc_wakeup(proc[next].pid);
+                //proc_block(proc[run].pid);
+                run = next;
+                running = 1;
+                proc[run].t_exec = 0;
+            }
+        }
+        
+        run_unit_time();
+        numberOfTime++;
+    }
+    return 0;
 }
