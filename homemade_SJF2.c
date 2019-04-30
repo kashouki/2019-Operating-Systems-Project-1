@@ -71,6 +71,7 @@ int nextP(struct process *proc, int numberOfProcess, int numberOfTime)
             ret = i;
         }
 	}
+    fprintf(stderr, "nextP %d!\n", ret);
 	return ret;
 }
 
