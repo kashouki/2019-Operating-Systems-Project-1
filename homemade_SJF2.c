@@ -94,15 +94,17 @@ int main(int argc, char* argv[])
 	countFinishing = 0;
 
 	for(ever) {
-		if (run != -1 && proc[run].t_exec == 0) {
-			waitpid(proc[run].pid, NULL, 0);
+        /*
+		if (run != -1) {
+			//waitpid(proc[run].pid, NULL, 0);
 			//printf("%s %d\n", proc[run].name, proc[run].pid);
 			run = -1;
 			countFinishing++;
-      fprintf(stderr, "cf: %d, n: %d", countFinishing, numberOfProcess);
+            fprintf(stderr, "cf: %d, n: %d", countFinishing, numberOfProcess);
 			if (countFinishing == numberOfProcess)
 				break;
 		}
+         */
 		for (int i = 0; i < numberOfProcess; i++) {
 			if (proc[i].t_ready == numberOfTime) {
                 create_proc(&proc[i].pid, proc[i].name, i, proc[i].t_exec);
