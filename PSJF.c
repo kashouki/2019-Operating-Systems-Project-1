@@ -13,9 +13,11 @@
 #define PRINTK 315
 #define CHILD_CPU 1
 #define PARENT_CPU 0
+#include "functions.h"
 
 static int last,numberOfTime,run,countFinishing;
 
+/*
 #define UNIT_T()				\
 {						\
 	volatile unsigned long i;		\
@@ -79,6 +81,7 @@ int proc_exec(struct process proc)
 
 	return pid;
 }
+ */
 
 int proc_wakeup(int pid)
 {
@@ -137,7 +140,7 @@ int main(int argc, char* argv[])
 	for (int i = 0; i < numberOfProcess; i++)
 		proc[i].pid = -1;
 
-	proc_assign_cpu(getpid(), PARENT_CPU);
+	assign_cpu(getpid(), PARENT_CPU);
 	proc_wakeup(getpid());
 	numberOfTime = 0;
 	run = -1;
@@ -155,6 +158,7 @@ int main(int argc, char* argv[])
 		for (int i = 0; i < numberOfProcess; i++) {
 			if (proc[i].t_ready == numberOfTime) {
 				proc[i].pid = proc_exec(proc[i]);
+                create_proc(&proc[i].pid, proc[i].name, i, proc[i].t_exec);
 				proc_block(proc[i].pid);
 			}
 
@@ -168,7 +172,7 @@ int main(int argc, char* argv[])
 				last = numberOfTime;
 			}
 		}
-		UNIT_T();
+		run_unit_time();
 		if (run != -1)
 			proc[run].t_exec--;
 		numberOfTime++;
