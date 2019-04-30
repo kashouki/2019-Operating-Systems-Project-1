@@ -79,6 +79,7 @@ int main(int argc, char* argv[])
 			//printf("%s %d\n", proc[run].name, proc[run].pid);
 			run = -1;
 			countFinishing++;
+      fprintf(stderr, "cf: %d, n: %d", countFinishing, numberOfProcess);
 			if (countFinishing == numberOfProcess)
 				break;
 		}
