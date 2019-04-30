@@ -7,15 +7,14 @@
 #define ever ;;
 
 
-int N, nextproc = 0, workingon = 0, running = 0;
+int N, nextproc = 0, running = 0;
 process* proc;
 
 void sig_child(int signum)
 {
     static int finished = 0;
     wait(NULL);
-    ++finished;
-    ++workingon;
+    finished++;
     running = 0;
     if (finished == N) exit(0);
 }
