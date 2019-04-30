@@ -13,15 +13,16 @@
 #include <time.h>
 #include <signal.h>
 #include <sched.h>
-#include "process.h"
-#include "scheduler.h"
 #include "functions.h"
 
 int main(){
 	int N; /*number of proc*/
 	scanf("%d", &N);
-
-	process *proc = take_task(N);/*scan the task*/
+    
+    
+    process *proc;
+    proc = take_tasks(N);/*scan the task*/
+    
 	int ret;
 	for(int i = 0; i < N; i++){
 		if(proc[i].pid == -1){

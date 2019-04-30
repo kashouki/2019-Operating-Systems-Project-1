@@ -1,6 +1,3 @@
-#ifndef _FUNCTIONS_H_
-#define _FUNCTIONS_H_
-
 #define TIME_UNIT 1000000UL
 
 typedef struct process {
@@ -17,12 +14,10 @@ void run_unit_time();
 int cmp_t_ready(const void *a, const void *b);
 
 //cmp for sorting by t_exec
-int cmp_t_exec(const void *a, const void *b)
+int cmp_t_exec(const void *a, const void *b);
 
 //create a process for a task.
 void create_proc(pid_t* pid, char name[], int idx, int t_exec);
 
-//take input tasks, tasks already sorted by t_ready. usage: process* proc[N] = take_tasks(N);
+//take input tasks, tasks already sorted by t_ready. usage: (process*) proc = take_tasks(N);
 process* take_tasks(int N);
-
-#endif

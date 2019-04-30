@@ -1,6 +1,21 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include<stdlib.h>
+#include <pthread.h>
+#include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <assert.h>
+#include <time.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/select.h>
+#include <sys/syscall.h>
+#include <time.h>
+#include <signal.h>
+#include <sched.h>
 #include "functions.h"
+#define ever    ;;
+
 
 //run unit of time. usage: run_unit_time();
 void run_unit_time() {
@@ -18,23 +33,23 @@ int cmp_t_exec(const void *a, const void *b) {
 
 //create a process for a task.
 void create_proc(pid_t* pid, char name[], int idx, int t_exec) {
-    if((pid = fork()) < 0) {
-        fprintf("fork error.\n");
+    if((*pid = fork()) < 0) {
+        fprintf(stderr, "fork error.\n");
         exit(1);
     }
-    else if(pid == 0) {//child
+    else if(*pid == 0) {//child
         char IDX[32];
         char T_EXEC[32];
         sprintf(IDX, "%d", idx);
         sprintf(T_EXEC, "%d", t_exec);
-        execl("./process", "./process", name, IDX, T_EXEC)
+        execl("./process", "./process", name, IDX, T_EXEC);
     }
-    else if(pid > 0) {//parent
+    else if(*pid > 0) {//parent
         
     }
 }
 
-//take input tasks. usage: process* proc[N] = take_tasks(N); N = number of tasks
+//take input tasks. usage: (process*) proc = take_tasks(N); N = number of tasks
 process* take_tasks(int N) {
     process *proc = (process *)malloc(N * sizeof(process));
     for(int i = 0; i < N; i++) {
