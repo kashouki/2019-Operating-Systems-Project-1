@@ -35,7 +35,7 @@ int main(void) {
     scanf("%d", &N);
     
     proc = take_tasks(N);
-    
+    qsort(proc, N, sizeof(process), cmp_t_exec);
     for (int i = 0; i < N; i++){
         proc[i].pid = -1;
     }
