@@ -29,6 +29,7 @@ int main(int argc, char *argv[]) {
     struct timespec t_start, t_finish;
     
     clock_gettime(CLOCK_REALTIME, &t_start);
+
     for(int i = 0; i < t_exec; i++) {
         run_unit_time();
     }
