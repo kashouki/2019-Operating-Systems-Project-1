@@ -55,10 +55,10 @@ int proc_block(int pid)
 
 int nextP(struct process *proc, int numberOfProcess, int numberOfTime)
 {
+	if(running != 1) {
+        	return running;
+    	}
 	int ret = -1;
-    if(running == 1) {
-        return ret;
-    }
     
 	for (int i = 0; i < numberOfProcess; i++) {
         if(proc[i].t_ready > numberOfTime) {
