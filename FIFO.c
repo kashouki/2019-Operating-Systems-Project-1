@@ -10,9 +10,9 @@ int main(int argc, char *argv[]) {
     proc = take_tasks(N);
     
     for (int i = 0; i < nproc; i++){
-        idxProcess[i] = i;
-    }
         proc[i].pid = -1;
+    }
+        
     
     int nextproc = 0;
     
