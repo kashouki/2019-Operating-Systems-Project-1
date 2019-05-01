@@ -17,6 +17,7 @@
 #define ever ;;
 
 static int last,numberOfTime, run, countFinishing;
+int running = 0;
 
 int proc_wakeup(int pid)
 {
@@ -86,21 +87,20 @@ int main(int argc, char* argv[])
             }
             
         }
-        int next = nextP(proc, numberOfProcess);
-        if (next != -1) {
-            if (run != next) {
-                proc_wakeup(proc[next].pid);
-                proc_block(proc[run].pid);
-                run = next;
-                last = numberOfTime;
+        if(run == -1) {
+            int next = nextP(proc, numberOfProcess);
+            if (next != -1) {
+                if (run != next) {
+                    proc_wakeup(proc[next].pid);
+                    proc_block(proc[run].pid);
+                    run = next;
+                    last = numberOfTime;
+                }
             }
         }
         run_unit_time();
         if (run != -1)
             proc[run].t_exec--;
-        if(proc[run].t_exec == 0) {
-            run = -1;
-        }
         numberOfTime++;
     }
     return 0;
