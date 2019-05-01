@@ -44,7 +44,7 @@ int nextP(struct process *proc, int numberOfProcess)
 {
     int ret = -1;
     for (int i = 0; i < numberOfProcess; i++) {
-        if (proc[i].pid == -1)
+        if (proc[i].pid == -1 || proc[i].t_exec == 0)
             continue;
         if (ret == -1 || proc[i].t_exec < proc[ret].t_exec)
             ret = i;
@@ -92,13 +92,15 @@ int main(int argc, char* argv[])
                 proc_wakeup(proc[next].pid);
                 proc_block(proc[run].pid);
                 run = next;
-                proc[run].t_exec = 0;
                 last = numberOfTime;
             }
         }
         run_unit_time();
-        //if (run != -1)
-          //  proc[run].t_exec--;
+        if (run != -1)
+            proc[run].t_exec--;
+        if(proc[run].t_exec == 0) {
+            run = -1;
+        }
         numberOfTime++;
     }
     return 0;
