@@ -17,7 +17,7 @@
 #define ever ;;
 
 static int last,numberOfTime, run, countFinishing;
-int running = 0;
+int running = 0, choose;
 
 int proc_wakeup(int pid)
 {
@@ -89,14 +89,14 @@ int main(int argc, char* argv[])
             
             for (int i = 0; i < numberOfProcess; i++) {
                 int max = 1000000000;
-                int choose;
+                choose = -1;
                 if(proc[i].t_ready != -1 && proc[i].t_ready == numberOfTime && proc[i].t_exec < max) {
                     max = proc[i].t_exec;
                     choose = i;
                 }
             }
-            if(choose != 1000000000) {
-                create_proc(&proc[choose].pid, proc[choose].name, i, proc[choose].t_exec);
+            if(choose != -1) {
+                create_proc(&proc[choose].pid, proc[choose].name, choose, proc[choose].t_exec);
                 proc_block(proc[choose].pid);
                 proc[choose].t_ready = -1;
             }
