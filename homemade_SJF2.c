@@ -44,6 +44,10 @@ int proc_block(int pid)
 int nextP(struct process *proc, int numberOfProcess)
 {
     int ret = -1;
+    if(run != -1) {
+        return ret;
+    }
+    
     for (int i = 0; i < numberOfProcess; i++) {
         if (proc[i].pid == -1 || proc[i].t_exec == 0)
             continue;
@@ -80,12 +84,15 @@ int main(int argc, char* argv[])
             if (countFinishing == numberOfProcess)
                 break;
         }
-        for (int i = 0; i < numberOfProcess; i++) {
-            if (proc[i].t_ready == numberOfTime) {
-                create_proc(&proc[i].pid, proc[i].name, i, proc[i].t_exec);
-                proc_block(proc[i].pid);
+        else {
+            for (int i = 0; i < numberOfProcess; i++) {
+                if (proc[i].t_ready <= numberOfTime && proc[i].t_ready != -1) {
+                    create_proc(&proc[i].pid, proc[i].name, i, proc[i].t_exec);
+                    proc_block(proc[i].pid);
+                    proc[i].t_ready = -1;
+                }
+                
             }
-            
         }
         if(run == -1) {
             int next = nextP(proc, numberOfProcess);
@@ -97,6 +104,7 @@ int main(int argc, char* argv[])
                     last = numberOfTime;
                 }
             }
+            next = -1;
         }
         run_unit_time();
         if (run != -1)
