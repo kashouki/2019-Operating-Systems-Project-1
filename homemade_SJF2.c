@@ -77,6 +77,7 @@ int main(int argc, char* argv[])
     
     for(ever) {
         if (run != -1 && proc[run].t_exec == 0) {
+            fprintf(stderr, "wait for %s", proc[run].name);
             waitpid(proc[run].pid, NULL, 0);
             //printf("%s %d\n", proc[run].name, proc[run].pid);
             run = -1;
@@ -99,7 +100,7 @@ int main(int argc, char* argv[])
             if (next != -1) {
                 if (run != next) {
                     proc_wakeup(proc[next].pid);
-                    proc_block(proc[run].pid);
+                    //proc_block(proc[run].pid);
                     run = next;
                     last = numberOfTime;
                 }
