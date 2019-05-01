@@ -77,7 +77,7 @@ int main(int argc, char* argv[])
     
     for(ever) {
         if (run != -1 && proc[run].t_exec == 0) {
-            fprintf(stderr, "wait for %s", proc[run].name);
+            fprintf(stderr, "wait for %s\n", proc[run].name);
             waitpid(proc[run].pid, NULL, 0);
             //printf("%s %d\n", proc[run].name, proc[run].pid);
             run = -1;
@@ -99,6 +99,7 @@ int main(int argc, char* argv[])
             int next = nextP(proc, numberOfProcess);
             if (next != -1) {
                 if (run != next) {
+                    fprintf(stderr, "%s selected\n", proc[next].name);
                     proc_wakeup(proc[next].pid);
                     //proc_block(proc[run].pid);
                     run = next;
