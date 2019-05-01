@@ -86,15 +86,33 @@ int main(int argc, char* argv[])
                 break;
         }
         else {
+            
             for (int i = 0; i < numberOfProcess; i++) {
-                if (proc[i].t_ready <= numberOfTime && proc[i].t_ready != -1) {
+                int max = 1000000000;
+                int choose;
+                if(proc[i].t_ready != -1 && proc[i].t_ready == numberOfTime && proc[i].t_exec < max) {
+                    max = proc[i].t_exec;
+                    choose = i;
+                }
+            }
+            if(choose != 1000000000) {
+                create_proc(&proc[choose].pid, proc[choose].name, i, proc[choose].t_exec);
+                proc_block(proc[choose].pid);
+                proc[choose].t_ready = -1;
+            }
+            
+            /*
+            for (int i = 0; i < numberOfProcess; i++) {
+                if (proc[i].t_ready == numberOfTime && proc[i].t_ready != -1) {
                     create_proc(&proc[i].pid, proc[i].name, i, proc[i].t_exec);
                     proc_block(proc[i].pid);
                     proc[i].t_ready = -1;
                 }
                 
             }
+             */
         }
+        /*
         if(run == -1) {
             int next = nextP(proc, numberOfProcess);
             if (next != -1) {
@@ -108,9 +126,16 @@ int main(int argc, char* argv[])
             }
             next = -1;
         }
-        run_unit_time();
+        
         if (run != -1)
             proc[run].t_exec--;
+        for(int i = 0; i < numberOfProcess; i++) {
+            if(proc[i].t_ready != -1 && proc[i].t_ready < numberOfTime) {
+                proc[i].t_ready = numberOfTime;
+            }
+        }
+         */
+        run_unit_time();
         numberOfTime++;
     }
     return 0;
