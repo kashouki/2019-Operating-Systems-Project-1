@@ -151,4 +151,6 @@ Sample Test 5
 
 ![PSJF5](https://user-images.githubusercontent.com/49953935/57005489-05d81c80-6c0b-11e9-8db7-9dfb6166f377.png)
 
+#CONCLUSION
 
+After we compare the actual result and the theoretical result, we came up to the conclusion that the differences are caused by several different things. The first one is that besides scheduling, the scheduler also needs time to run and execute another process, such as adjusting new process. Next, because the program running in our computer is not only this project, the other program performance may also effect the final result of the execution. It can trigger the context switch that may happen. Lastly, it can also happen if there is a bug in our code that we haven't been able to resolve to. 
